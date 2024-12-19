@@ -34,6 +34,7 @@ DoublyCircularLinkedList<T>::~DoublyCircularLinkedList() {
             delete current;
             current = next;
         } while (current != head);
+        head = nullptr;
     }
 }
 
@@ -41,6 +42,8 @@ template<typename T>
 void DoublyCircularLinkedList<T>::insert(Node<T>* newNode) {
     if (!head) {
         head = newNode;
+        newNode->right = newNode;
+        newNode->left = newNode;
     } else {
         Node<T>* tail = head->left;
         newNode->right = head;

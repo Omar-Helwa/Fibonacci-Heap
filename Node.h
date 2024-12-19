@@ -52,12 +52,16 @@ public:
      * @return The key value of the node.
      */
     int getKey() const;
-
     /**
      * @brief Gets the name of the node.
      * @return The name of the node.
      */
     T getName() const;
+    /**
+     * @brief Gets the degree of the node.
+     * @return The name of the node.
+     */
+    int getDeg() const;
     friend class FibHeap<T>;
     friend class DoublyCircularLinkedList<T>;
 };
@@ -69,7 +73,10 @@ template<typename T>
 int Node<T>::getKey() const {
     return key;
 }
-
+template<typename T>
+int Node<T>::getDeg() const {
+    return deg;
+}
 template<typename T>
 T Node<T>::getName() const {
     return Name;

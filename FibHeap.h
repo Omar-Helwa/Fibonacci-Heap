@@ -150,15 +150,13 @@ Node<T> *FibHeap<T>::extractMin() {
     Node<T> *minptr = min;
     if (minptr != nullptr) {
         if (minptr->child != nullptr) {
-            Node<T> *child = minptr->child->head;
-
-            for (int i = 0; i < minptr->child->size; i++) {
+            int numChildren = minptr->child->size;
+            for (int i = 0; i < numChildren; i++) {
                 // Add children of minptr to the root list
-                child->left->right = child->right;
-                child->right->left = child->left;
+                Node<T> *child = minptr->child->head;
+                minptr->child->remove(child);
                 rootList.insert(child);
                 child->parent = nullptr;
-                child = child->right;
             }
         }
 
@@ -170,13 +168,21 @@ Node<T> *FibHeap<T>::extractMin() {
         } else {
             min = minptr->right;
             consolidate();
+            // Update min to the new minimum node in the root list
+            Node<T> *current = rootList.head;
+            min = current;
+            do {
+                if (current->key < min->key) {
+                    min = current;
+                }
+                current = current->right;
+            } while (current != rootList.head);
         }
         size--;
     }
 
     return minptr;
 }
-
 template<typename T>
 void FibHeap<T>::consolidate() {
     const int fibsize = 45; // Maximum degree of a node in a Fibonacci heap
@@ -185,47 +191,49 @@ void FibHeap<T>::consolidate() {
     for (int i = 0; i < fibsize; i++) {
         A[i] = nullptr;
     }
-
-    Node<T> *x = rootList.head;
-    for (int i = 0; i < rootList.size; i++) {
+    Node<T> *x = min;
+    int iterations = rootList.size;
+    while (--iterations) {
         int d = x->deg;
+        Node<T> *next = x->right; // Save the next node to visit
         while (A[d] != nullptr) {
             Node<T> *y = A[d];
             if (x->key > y->key) {
-                Node<T> *temp = x;
-                x = y;
-                y = temp;
+                std::swap(x, y);
             }
             link(y, x);
             A[d] = nullptr;
-            ++d;
+            d++;
         }
         A[d] = x;
-        x = x->right;
+        x -> deg = d;
+        x = next;
     }
     min = nullptr;
+    rootList = DoublyCircularLinkedList<T>(); // Initialize new root list to be filled with the consolidated nodes
     for (int i = 0; i < fibsize; i++) {
         if (A[i] != nullptr) {
             rootList.insert(A[i]);
-            if ((A[i])->key < min->key) {
+            if (min == nullptr || A[i]->key < min->key) {
                 min = A[i];
             }
         }
     }
 }
 
-
 template<typename T>
 void FibHeap<T>::link(Node<T> *y, Node<T> *x) {
-    Node<T> *temp = this->rootList.remove(y);
-    if (x->child == nullptr) {
-        x->child = new DoublyCircularLinkedList<T>();
-    }
-    x->child->insert(temp);
-    temp->parent = x;
-    temp->mark = false;
+    if (y != x) {
+        Node<T> *temp = this->rootList.remove(y);
+        if (x->child == nullptr) {
+            x->child = new DoublyCircularLinkedList<T>();
+        }
+        x->child->insert(temp);
+        temp->parent = x;
+        temp->mark = false;
 
-    std::cout << "Link node successful: " << x->key << " " << y->key << std::endl;
+        std::cout << "Link node successful: " << y->key << " -> " << x->key << std::endl;
+    }
 }
 
 // template<typename T>
@@ -324,7 +332,8 @@ void FibHeap<T>::display() {
 
     Node<T> *current = rootList.head;
     do {
-        std::cout << "Key: " << current->getKey() << ", Name: " << current->getName() << std::endl;
+        std::cout << "Key: " << current->getKey() << ", Name: " << current->getName() << ", Degree: " << current->getDeg() <<std::endl; // Print the current node
+
         current = current->right;
     } while (current != rootList.head);
 }

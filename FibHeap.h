@@ -137,49 +137,35 @@ void FibHeap<T>::insert(Node<T> *x) {
     x->parent = nullptr;
     x->child = nullptr;
     x->mark = false;
-
     rootList.insert(x);
-    if (min == nullptr || x->key < min->key) {
+    if (min == nullptr || x->key < min->key)
         min = x;
-    }
     ++size;
 }
 
 template<typename T>
 Node<T> *FibHeap<T>::extractMin() {
     Node<T> *minptr = min;
-    if (minptr != nullptr) {
-        if (minptr->child != nullptr) {
-            int numChildren = minptr->child->size;
-            for (int i = 0; i < numChildren; i++) {
-                // Add children of minptr to the root list
-                Node<T> *child = minptr->child->head;
-                minptr->child->remove(child);
-                rootList.insert(child);
-                child->parent = nullptr;
-            }
+    if (minptr == nullptr){return minptr;}
+    if (minptr->child != nullptr) {
+        int numChildren = minptr->child->size;
+        for (int i = 0; i < numChildren; i++) {
+            // Add children of minptr to the root list
+            Node<T> *child = minptr->child->head;
+            minptr->child->remove(child);
+            rootList.insert(child);
+            child->parent = nullptr;
         }
-
-        minptr->left->right = minptr->right; // Remove minptr from the root list
-        minptr->right->left = minptr->left;
-
-        if (minptr == minptr->right) {
-            min = nullptr;
-        } else {
-            min = minptr->right;
-            consolidate();
-            // Update min to the new minimum node in the root list
-            Node<T> *current = rootList.head;
-            min = current;
-            do {
-                if (current->key < min->key) {
-                    min = current;
-                }
-                current = current->right;
-            } while (current != rootList.head);
-        }
-        size--;
     }
+    minptr->left->right = minptr->right; // Remove minptr from the root list
+    minptr->right->left = minptr->left;
+    if (minptr == minptr->right) {
+        min = nullptr;
+    } else {
+        min = minptr->right;
+        consolidate();
+    }
+    size--;
 
     return minptr;
 }
@@ -187,53 +173,43 @@ template<typename T>
 void FibHeap<T>::consolidate() {
     const int fibsize = 45; // Maximum degree of a node in a Fibonacci heap
     Node<T> *A[fibsize];
-
-    for (int i = 0; i < fibsize; i++) {
-        A[i] = nullptr;
-    }
     Node<T> *x = min;
     int iterations = rootList.size;
+    for (int i = 0; i < fibsize; i++)
+        A[i] = nullptr;
     while (--iterations) {
         int d = x->deg;
-        Node<T> *next = x->right; // Save the next node to visit
         while (A[d] != nullptr) {
             Node<T> *y = A[d];
-            if (x->key > y->key) {
+            if (x->key > y->key)
                 std::swap(x, y);
-            }
             link(y, x);
             A[d] = nullptr;
-            d++;
+            ++d;
         }
         A[d] = x;
         x -> deg = d;
-        x = next;
+        x = x->right;
     }
     min = nullptr;
     rootList = DoublyCircularLinkedList<T>(); // Initialize new root list to be filled with the consolidated nodes
     for (int i = 0; i < fibsize; i++) {
-        if (A[i] != nullptr) {
-            rootList.insert(A[i]);
-            if (min == nullptr || A[i]->key < min->key) {
-                min = A[i];
-            }
-        }
+        if (A[i] == nullptr) continue;
+        rootList.insert(A[i]);
+        if (min == nullptr || A[i]->key < min->key)
+            min = A[i];
     }
 }
 
 template<typename T>
 void FibHeap<T>::link(Node<T> *y, Node<T> *x) {
-    if (y != x) {
-        Node<T> *temp = this->rootList.remove(y);
-        if (x->child == nullptr) {
-            x->child = new DoublyCircularLinkedList<T>();
-        }
-        x->child->insert(temp);
-        temp->parent = x;
-        temp->mark = false;
-
-        std::cout << "Link node successful: " << y->key << " -> " << x->key << std::endl;
-    }
+    Node<T> *temp = this->rootList.remove(y);
+    if (x->child == nullptr)
+        x->child = new DoublyCircularLinkedList<T>();
+    x->child->insert(temp);
+    temp->parent = x;
+    temp->mark = false;
+    std::cout << "Link node successful: " << y->key << " -> " << x->key << std::endl;
 }
 
 // template<typename T>

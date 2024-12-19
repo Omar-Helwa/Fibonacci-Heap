@@ -1,0 +1,6 @@
+# ninja log v6
+10	476	7563261636214373	CMakeFiles/untitled.dir/main.cpp.obj.ddi	52e0ec7bcee8adb1
+476	531	7563261640873695	CMakeFiles/untitled.dir/CXX.dd	80cc78114b845773
+537	2219	7563261641484650	CMakeFiles/untitled.dir/main.cpp.obj	b47f5365fb8c93a5
+476	531	7563261640873695	CMakeFiles/untitled.dir/main.cpp.obj.modmap	80cc78114b845773
+2219	2385	7563261658300170	untitled.exe	d5d85298eca937d9

@@ -146,7 +146,9 @@ void FibHeap<T>::insert(Node<T> *x) {
 template<typename T>
 Node<T> *FibHeap<T>::extractMin() {
     Node<T> *minptr = min;
-    if (minptr == nullptr){return minptr;}
+    if (minptr == nullptr) {
+        return minptr;
+    }
     if (minptr->child != nullptr) {
         int numChildren = minptr->child->size;
         for (int i = 0; i < numChildren; i++) {
@@ -169,6 +171,7 @@ Node<T> *FibHeap<T>::extractMin() {
 
     return minptr;
 }
+
 template<typename T>
 void FibHeap<T>::consolidate() {
     const int fibsize = 45; // Maximum degree of a node in a Fibonacci heap
@@ -188,7 +191,7 @@ void FibHeap<T>::consolidate() {
             ++d;
         }
         A[d] = x;
-        x -> deg = d;
+        x->deg = d;
         x = x->right;
     }
     min = nullptr;
@@ -212,92 +215,100 @@ void FibHeap<T>::link(Node<T> *y, Node<T> *x) {
     std::cout << "Link node successful: " << y->key << " -> " << x->key << std::endl;
 }
 
-// template<typename T>
-// void FibHeap<T>::cut(Node<T> *x, Node<T> *y) {
-//     if(x ->parent != y) {
-//         std::cerr << "Calling Cut function while provided wrong child and parent.";
-//     }
-//     Node<T>* temp = y->child->remove(x);
-//     this->rootList.insert(temp);
-//     temp->parent = nullptr;
-//     temp->mark = false;
-// }
+template<typename T>
+Node<T> *FibHeap<T>::search(Node<T> *current, int key) const {
+    if (current == nullptr) {
+        return nullptr;
+    }
 
-// template<typename T>
-// void FibHeap<T>::cascadingCut(Node<T> *y) {
-//     if(y->parent != nullptr) {
-//         if(y->mark == false) {
-//             y->mark == true;
-//         } else {
-//             this->cut(y, y->parent);
-//             this->cascadingCut(y->parent);
-//         }
-//     }
-// }
+    Node<T> *result = nullptr;
+    Node<T> *start = current;
+    do {
+        if (current->key == key) {
+            result = current;
+            break;
+        }
+        if (current->child != nullptr) {
+            result = search(current->child->head, key); // Start search from the head of the child list
+            if (result != nullptr) {
+                break;
+            }
+        }
+        current = current->right;
+    } while (current != start);
+
+    return result;
+}
+
+template<typename T>
+Node<T> *FibHeap<T>::find(int key) const {
+    return search(this->rootList.head, key);
+}
+
+template<typename T>
+void FibHeap<T>::modifyKey(int currentNodeKey, int new_k) {
+    Node<T> *x = find(currentNodeKey);
+
+    if (x != nullptr && new_k > x->key) {
+        std::cerr << "New key is greater than the current key." << std::endl;
+    }
+
+    x->key = new_k;
+    Node<T> *y = x->parent;
+    if (y != nullptr && x->key < y->key) {
+        cut(x, y);
+        cascadingCut(y);
+    }
+    if (x->key < min->key) {
+        min = x;
+    }
+}
+
+template<typename T>
+void FibHeap<T>::cut(Node<T> *x, Node<T> *y) {
+    if (x->parent != y) {
+        std::cerr << "Calling Cut function while provided wrong child and parent.";
+    }
+
+    Node<T> *temp = y->child->remove(x);
+    rootList.insert(temp);
+    temp->parent = nullptr;
+    temp->mark = false;
+}
+
+template<typename T>
+void FibHeap<T>::cascadingCut(Node<T> *y) {
+    Node<T> *z = y->parent;
+    if (z != nullptr) {
+        if (y->mark == false) {
+            y->mark == true;
+        } else {
+            cut(y, z);
+            cascadingCut(z);
+        }
+    }
+}
 
 
-// template<typename T>
-// Node<T> *FibHeap<T>::displayMinimum() {
-//     return this->min;
-// }
+template<typename T>
+void FibHeap<T>::deleteNode(int k) {
+    Node<T> *x = find(k);
 
-// template<typename T>
-// void FibHeap<T>::modifyKey(int k, int new_k) {
-//     Node<T> * x = find(k);
-//
-//     x->key = new_k;
-//     if((x->parent != nullptr) && x->key < x->parent->key) {
-//         cut(x, x->parent);
-//         cascadingCut(x->parent);
-//     }
-//     if(x->key < this->min->key) {
-//         this->min = x;
-//     }
-// }
+    if (x->parent) {
+        Node<T> *temp = x->parent;
+        temp->child->deleteNode(x);
+    } else {
+        this->rootList.deleteNode(x);
+    }
+    std::cout << "Deleted node x successfully";
+}
 
-// template<typename T>
-// void FibHeap<T>::deleteNode(int k) {
-//     Node<T>* x = find(k);
-//
-//     if(x->parent) {
-//         Node<T> *  temp = x->parent;
-//         temp->child->deleteNode(x);
-//     } else {
-//         this->rootList.deleteNode(x);
-//     }
-//     cout << "Deleted node x successfully";
-//
-// }
 
-// template<typename T>
-// Node<T>* FibHeap<T>::search(Node<T>* current, int key) const {
-//     if (current == nullptr) {
-//         return nullptr;
-//     }
-//
-//     Node<T>* result = nullptr;
-//     Node<T>* start = current;
-//     do {
-//         if (current->key == key) {
-//             result = current;
-//             break;
-//         }
-//         if (current->child != nullptr) {
-//             result = search(current->child->head, key); // Start search from the head of the child list
-//             if (result != nullptr) {
-//                 break;
-//             }
-//         }
-//         current = current->right;
-//     } while (current != start);
-//
-//     return result;
-// }
+template<typename T>
+Node<T> *FibHeap<T>::displayMinimum() {
+    return this->min;
+}
 
-// template<typename T>
-// Node<T>* FibHeap<T>::find(int key) const {
-//     return search(this->rootList.head, key);
-// }
 
 template<typename T>
 void FibHeap<T>::display() {
@@ -308,7 +319,8 @@ void FibHeap<T>::display() {
 
     Node<T> *current = rootList.head;
     do {
-        std::cout << "Key: " << current->getKey() << ", Name: " << current->getName() << ", Degree: " << current->getDeg() <<std::endl; // Print the current node
+        std::cout << "Key: " << current->getKey() << ", Name: " << current->getName() << ", Degree: " << current->
+                getDeg() << std::endl; // Print the current node
 
         current = current->right;
     } while (current != rootList.head);

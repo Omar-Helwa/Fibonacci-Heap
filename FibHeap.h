@@ -1,6 +1,7 @@
 #ifndef FIBHEAP_H
 #define FIBHEAP_H
 #include <functional>
+#include <iostream>
 
 template<typename T>
 class Node;
@@ -118,7 +119,7 @@ public:
      * @post Node x is deleted from the heap.
      */
     void deleteNode(int k);
-
+    bool isEmpty();
     void display();
 
     /**
@@ -171,7 +172,10 @@ Node<T> *FibHeap<T>::extractMin() {
 
     return minptr;
 }
-
+template<typename T>
+bool FibHeap<T>::isEmpty() {
+    return size == 0;
+}
 template<typename T>
 void FibHeap<T>::consolidate() {
     const int fibsize = 45; // Maximum degree of a node in a Fibonacci heap

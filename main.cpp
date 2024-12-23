@@ -1,6 +1,7 @@
 #include <iostream>
 #include "DoublyCircularLinkedList.h"
 #include "FibHeap.h"
+#include "HospitalTaskManager.h"
 
 int main() {
     // FibHeap<int> fibHeap{};
@@ -59,38 +60,60 @@ int main() {
     // fibHeap.display();
     // delete minNode; // Clean up the extracted node
     // delete minNode2;
+    //
+    //
+    // FibHeap<int> fibHeap{};
+    // auto *node1 = new Node<int>(5, 5);
+    // auto *node2 = new Node<int>(3, 3);
+    // auto *node3 = new Node<int>(7, 7);
+    // auto *node4 = new Node<int>(10, 10);
+    //
+    // fibHeap.insert(node1);
+    // fibHeap.insert(node2);
+    // fibHeap.insert(node3);
+    // fibHeap.insert(node4);
+    //
+    // std::cout << "Fibonacci Heap before deleting a node:" << std::endl;
+    // fibHeap.display();
+    //
+    // // Display the minimum node
+    // Node<int> *minNode = fibHeap.displayMinimum();
+    // if (minNode) {
+    //     std::cout << "Minimum node: Key = " << minNode->getKey() << ", Name = " << minNode->getName() << std::endl;
+    // }
+    //
+    // // Delete a node with key 3
+    // fibHeap.deleteNode(3);
+    //
+    // std::cout << "Fibonacci Heap after deleting the node with key 3:" << std::endl;
+    // fibHeap.display();
+    //
+    // // Display the minimum node again
+    // minNode = fibHeap.displayMinimum();
+    // if (minNode) {
+    //     std::cout << "Minimum node: Key = " << minNode->getKey() << ", Name = " << minNode->getName() << std::endl;
+    // }
+    // return 0;
 
+        HospitalTaskManager manager;
 
-    FibHeap<int> fibHeap{};
-    auto *node1 = new Node<int>(5, 5);
-    auto *node2 = new Node<int>(3, 3);
-    auto *node3 = new Node<int>(7, 7);
-    auto *node4 = new Node<int>(10, 10);
+        // Add tasks
+        manager.addTask("Check patient vitals", 5);
+        manager.addTask("Administer medication", 2);
+        manager.addTask("Schedule surgery", 1);
 
-    fibHeap.insert(node1);
-    fibHeap.insert(node2);
-    fibHeap.insert(node3);
-    fibHeap.insert(node4);
+        // Complete the highest priority task
+        manager.completeHighestPriorityTask();
 
-    std::cout << "Fibonacci Heap before deleting a node:" << std::endl;
-    fibHeap.display();
+        // Update task priority
+        manager.updateTaskPriority(5, 3);
 
-    // Display the minimum node
-    Node<int> *minNode = fibHeap.displayMinimum();
-    if (minNode) {
-        std::cout << "Minimum node: Key = " << minNode->getKey() << ", Name = " << minNode->getName() << std::endl;
-    }
+        // Complete the highest priority task again
+        manager.completeHighestPriorityTask();
 
-    // Delete a node with key 3
-    fibHeap.deleteNode(3);
+        // Complete the remaining tasks
+        manager.completeHighestPriorityTask();
+        manager.completeHighestPriorityTask();
 
-    std::cout << "Fibonacci Heap after deleting the node with key 3:" << std::endl;
-    fibHeap.display();
-
-    // Display the minimum node again
-    minNode = fibHeap.displayMinimum();
-    if (minNode) {
-        std::cout << "Minimum node: Key = " << minNode->getKey() << ", Name = " << minNode->getName() << std::endl;
-    }
-    return 0;
+        return 0;
 }

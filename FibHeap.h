@@ -300,7 +300,7 @@ void FibHeap<T>::deleteNode(int k) {
     } else {
         this->rootList.deleteNode(x);
     }
-    std::cout << "Deleted node x successfully";
+    std::cout << "Deleted node x successfully..." << std::endl;
 }
 
 

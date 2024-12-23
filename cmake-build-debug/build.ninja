@@ -56,13 +56,6 @@ build CMakeFiles/FibonacciHeapGUI.dir/src/main.cpp.obj: CXX_COMPILER__FibonacciH
   OBJECT_DIR = CMakeFiles\FibonacciHeapGUI.dir
   OBJECT_FILE_DIR = CMakeFiles\FibonacciHeapGUI.dir\src
 
-build CMakeFiles/FibonacciHeapGUI.dir/src/VisualizeFibonacciHeap.cpp.obj: CXX_COMPILER__FibonacciHeapGUI_unscanned_Debug C$:/Users/himoa/CLionProjects/FibHeapGUI/src/VisualizeFibonacciHeap.cpp || cmake_object_order_depends_target_FibonacciHeapGUI
-  DEP_FILE = CMakeFiles\FibonacciHeapGUI.dir\src\VisualizeFibonacciHeap.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/himoa/CLionProjects/FibHeapGUI/include -IC:/Users/himoa/CLionProjects/FibHeapGUI/include/imgui -isystem C:/Users/himoa/CLionProjects/FibHeapGUI/include/GLFW
-  OBJECT_DIR = CMakeFiles\FibonacciHeapGUI.dir
-  OBJECT_FILE_DIR = CMakeFiles\FibonacciHeapGUI.dir\src
-
 
 # =============================================================================
 # Link build statements for EXECUTABLE target FibonacciHeapGUI
@@ -71,7 +64,7 @@ build CMakeFiles/FibonacciHeapGUI.dir/src/VisualizeFibonacciHeap.cpp.obj: CXX_CO
 #############################################
 # Link the executable FibonacciHeapGUI.exe
 
-build FibonacciHeapGUI.exe: CXX_EXECUTABLE_LINKER__FibonacciHeapGUI_Debug CMakeFiles/FibonacciHeapGUI.dir/src/main.cpp.obj CMakeFiles/FibonacciHeapGUI.dir/src/VisualizeFibonacciHeap.cpp.obj | libimgui.a C$:/Users/himoa/CLionProjects/FibHeapGUI/lib/libglfw3.a || libimgui.a
+build FibonacciHeapGUI.exe: CXX_EXECUTABLE_LINKER__FibonacciHeapGUI_Debug CMakeFiles/FibonacciHeapGUI.dir/src/main.cpp.obj | libimgui.a C$:/Users/himoa/CLionProjects/FibHeapGUI/lib/libglfw3.a || libimgui.a
   FLAGS = -g
   LINK_LIBRARIES = libimgui.a  C:/Users/himoa/CLionProjects/FibHeapGUI/lib/libglfw3.a  -lopengl32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\FibonacciHeapGUI.dir

@@ -1,18 +1,12 @@
 #pragma once
 
-#include "NodeArray.h"
+template <typename T>
+class FibHeap;
 
 template <typename T>
 class DoublyCircularLinkedList;
 
-template <typename T>
-class FibHeap;
-
-class ImDrawList;
-struct ImVec2;
-typedef unsigned int ImU32;
-class NodeArray;
-
+class VisualizeFibonacciHeap;
 
 /**
  * @class Node
@@ -49,6 +43,8 @@ public:
      * @brief Friend class declaration.
      */
     friend class DoublyCircularLinkedList<T>;
+    friend class VisualizeFibonacciHeap;
+
     // friend class FibHeap<T>;
 
     /**
@@ -66,10 +62,8 @@ public:
      * @return The name of the node.
      */
     int getDeg() const;
-
-    friend class FibHeap;
-    friend class DoublyCircularLinkedList;
-
+    friend class FibHeap<T>;
+    friend class DoublyCircularLinkedList<T>;
 };
 
 template<typename T>

@@ -7,8 +7,12 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(include)
 
 # --- Source Files ---
-add_executable(FibonacciHeapGUI src/main.cpp src/VisualizeFibonacciHeap.cpp
-        src/VisualizeFibonacciHeap.h)
+add_executable(FibonacciHeapGUI
+        src/main.cpp
+        src/VisualizeFibonacciHeap.h
+        include/DoublyCircularLinkedList.h
+        include/FibHeap.h
+        include/Node.h)
 
 # --- ImGui ---
 add_library(imgui STATIC

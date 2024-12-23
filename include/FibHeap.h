@@ -1,15 +1,14 @@
 #ifndef FIBHEAP_H
 #define FIBHEAP_H
 #include <functional>
-#include <string>
-#include "NodeArray.h"
 #include <iostream>
+#include "DoublyCircularLinkedList.h"
+
 
 template<typename T>
 class Node;
 
-template<typename T>
-class DoublyCircularLinkedList;
+class VisualizeFibonacciHeap;
 
 
 /**
@@ -74,11 +73,7 @@ private:
 
 public:
 
-    friend class Node<T>;
-    friend void VisualizeFibonacciHeap(FibHeap<std::string>& heap);
-    friend NodeArray getRoots(const FibHeap<std::string>& heap);
-    friend NodeArray getChildren(Node<std::string>* node);
-
+    friend class VisualizeFibonacciHeap;
 
     /**
      * @brief Default constructor to initialize an empty Fibonacci Heap.
@@ -310,7 +305,7 @@ void FibHeap<T>::deleteNode(int k) {
     } else {
         this->rootList.deleteNode(x);
     }
-    std::cout << "Deleted node x successfully";
+    std::cout << "Deleted node x successfully..." << std::endl;
 }
 
 

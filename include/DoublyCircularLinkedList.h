@@ -1,8 +1,12 @@
 #pragma once
 #include "Node.h"
-#include "FibHeap.h"
 
+template <typename T>
+class FibHeap;
 
+class VisualizeFibonacciHeap;
+
+// VisualizeFibonacciHeap
 
 template<typename T>
 class DoublyCircularLinkedList {
@@ -12,8 +16,6 @@ private:
     void insert(Node<T>* newNode); // Private insert function
 
 public:
-    friend NodeArray getChildren(Node<std::string>* node);
-
     DoublyCircularLinkedList();
     ~DoublyCircularLinkedList();
 
@@ -24,6 +26,8 @@ public:
     Node<T> *remove(Node<T> *x);
 
     friend class FibHeap<T>;
+    friend class VisualizeFibonacciHeap;
+
 };
 
 template<typename T>

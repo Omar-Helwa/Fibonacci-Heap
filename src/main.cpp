@@ -47,6 +47,9 @@ int main(int, char**) {
     // Create an instance of your Fibonacci Heap (using std::string for the Name)
     FibHeap<std::string> myHeap;
 
+    // Create an instance of the visualization class
+    VisualizeFibonacciHeap visualizer;
+
     // Main loop
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -57,7 +60,7 @@ int main(int, char**) {
         ImGui::NewFrame();
 
         // Call your visualization function
-        VisualizeFibonacciHeap(myHeap);
+        visualizer.visualize(myHeap);
 
         // Rendering
         ImGui::Render();

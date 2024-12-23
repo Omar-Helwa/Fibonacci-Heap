@@ -1,7 +1,3 @@
-//
-// Created by Ibrahim Abdelfattah 8==D
-//
-
 #pragma once
 #include "FibHeap.h"
 

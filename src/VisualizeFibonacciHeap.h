@@ -22,8 +22,8 @@ struct ImVec2;
  */
 class VisualizeFibonacciHeap {
 private:
-    const float nodeRadius = 30.0f; ///< Radius of the nodes in the visualization.
-    static const int MAX_NODES = 100; ///< Maximum number of nodes to visualize.
+    const float nodeRadius = 25.0f; ///< Radius of the nodes in the visualization.
+    static const int MAX_NODES = 10000; ///< Maximum number of nodes to visualize.
 
     /**
     * @struct NodePositionPair
@@ -77,13 +77,15 @@ private:
     }
 
     /**
-     * @brief Draws links between a node and its children.
+     * @brief Draws links between a node and its children, and horizontally between the children and root nodes.
      * @param drawList Pointer to the ImDrawList.
      * @param node Pointer to the parent node.
      * @param nodePositions Array of node positions.
      * @param numPositions Number of node positions.
+     * @param heap Reference to the Fibonacci Heap.
      */
-    void drawLinks(ImDrawList *drawList, Node<std::string> *node, NodePositionPair *nodePositions, int numPositions) {
+    void drawLinks(ImDrawList *drawList, Node<std::string> *node, NodePositionPair *nodePositions, int numPositions,
+                   const FibHeap<std::string> &heap) {
         if (node == nullptr) return;
 
         // Find the position of the current node
@@ -97,6 +99,8 @@ private:
         // Draw links to children if they exist
         if (node->child) {
             NodeArray children = getChildren(node);
+            ImVec2 previousChildPos;
+
             for (int i = 0; i < children.count; i++) {
                 Node<std::string> *child = children.nodes[i];
                 ImVec2 childPos;
@@ -106,6 +110,7 @@ private:
                     }
                 }
 
+                // Draw vertical link from parent to child
                 ImVec2 direction = ImVec2(childPos.x - parentPos.x, childPos.y - parentPos.y);
                 float length = sqrt(direction.x * direction.x + direction.y * direction.y);
                 ImVec2 unitDirection = ImVec2(direction.x / length, direction.y / length);
@@ -116,8 +121,55 @@ private:
                                     childPos.y - unitDirection.y * nodeRadius);
 
                 drawList->AddLine(start, end, IM_COL32(255, 255, 255, 255), 3.0f);
-                drawLinks(drawList, child, nodePositions, numPositions);
+
+                // Draw horizontal link between siblings
+                if (i > 0) {
+                    ImVec2 siblingDirection = ImVec2(childPos.x - previousChildPos.x, childPos.y - previousChildPos.y);
+                    float siblingLength = sqrt(
+                        siblingDirection.x * siblingDirection.x + siblingDirection.y * siblingDirection.y);
+                    ImVec2 siblingUnitDirection = ImVec2(siblingDirection.x / siblingLength,
+                                                         siblingDirection.y / siblingLength);
+
+                    ImVec2 siblingStart = ImVec2(previousChildPos.x + siblingUnitDirection.x * nodeRadius,
+                                                 previousChildPos.y + siblingUnitDirection.y * nodeRadius);
+                    ImVec2 siblingEnd = ImVec2(childPos.x - siblingUnitDirection.x * nodeRadius,
+                                               childPos.y - siblingUnitDirection.y * nodeRadius);
+
+                    drawList->AddLine(siblingStart, siblingEnd, IM_COL32(0, 255, 0, 255), 3.0f);
+                    // Green color for horizontal links
+                }
+
+                previousChildPos = childPos;
+                drawLinks(drawList, child, nodePositions, numPositions, heap);
             }
+        }
+
+        // Draw horizontal links between root nodes
+        NodeArray roots = getRoots(heap);
+        ImVec2 previousRootPos;
+        for (int i = 0; i < roots.count; i++) {
+            Node<std::string> *root = roots.nodes[i];
+            ImVec2 rootPos;
+            for (int j = 0; j < numPositions; j++) {
+                if (nodePositions[j].first == root) {
+                    rootPos = nodePositions[j].second;
+                }
+            }
+
+            if (i > 0) {
+                ImVec2 rootDirection = ImVec2(rootPos.x - previousRootPos.x, rootPos.y - previousRootPos.y);
+                float rootLength = sqrt(rootDirection.x * rootDirection.x + rootDirection.y * rootDirection.y);
+                ImVec2 rootUnitDirection = ImVec2(rootDirection.x / rootLength, rootDirection.y / rootLength);
+
+                ImVec2 rootStart = ImVec2(previousRootPos.x + rootUnitDirection.x * nodeRadius,
+                                          previousRootPos.y + rootUnitDirection.y * nodeRadius);
+                ImVec2 rootEnd = ImVec2(rootPos.x - rootUnitDirection.x * nodeRadius,
+                                        rootPos.y - rootUnitDirection.y * nodeRadius);
+
+                drawList->AddLine(rootStart, rootEnd, IM_COL32(0, 0, 255, 255), 3.0f); // Blue color for root links
+            }
+
+            previousRootPos = rootPos;
         }
     }
 
@@ -129,6 +181,7 @@ private:
      * @param parentPos Position of the parent node.
      * @param canvasWidth Width of the canvas.
      */
+
     void calculateNodePositions(Node<std::string> *node, NodePositionPair *nodePositions, int &numPositions,
                                 ImVec2 parentPos, float canvasWidth) {
         if (node == nullptr || node->child == nullptr) return;
@@ -290,7 +343,7 @@ public:
         // Draw links between nodes
         if (roots.count > 0) {
             for (int i = 0; i < roots.count; i++) {
-                drawLinks(drawList, roots.nodes[i], nodePositions, numPositions);
+                drawLinks(drawList, roots.nodes[i], nodePositions, numPositions, heap);
             }
         }
 

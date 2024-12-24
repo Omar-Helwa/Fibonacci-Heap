@@ -11,6 +11,8 @@ class Node;
 
 class VisualizeFibonacciHeap;
 
+class VisualizeTaskManager;
+
 /**
  * @class FibHeap
  * @brief Represents a Fibonacci Heap data structure.
@@ -67,6 +69,7 @@ private:
 
 public:
     friend class VisualizeFibonacciHeap;
+    friend class VisualizeTaskManager;
 
     /**
      * @brief Constructs a new Fibonacci Heap object.

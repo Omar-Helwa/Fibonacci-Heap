@@ -23,6 +23,12 @@ class DoublyCircularLinkedList;
 class VisualizeFibonacciHeap;
 
 /**
+ * @class VisualizeTaskManager
+ * @brief Forward declaration of VisualizeFibonacciHeap class.
+ */
+class VisualizeTaskManager;
+
+/**
  * @class Node
  * @brief Represents a node in a doubly linked list.
  * @tparam T The type of data stored in the node.
@@ -74,6 +80,7 @@ public:
     friend class DoublyCircularLinkedList<T>;
     friend class VisualizeFibonacciHeap;
     friend class FibHeap<T>;
+    friend class VisualizeTaskManager;
 };
 
 template<typename T>

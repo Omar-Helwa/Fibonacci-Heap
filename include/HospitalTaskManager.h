@@ -5,6 +5,11 @@
 #include "Node.h"
 #include <iostream>
 #include <string>
+
+// Forward Declaration
+class VisualizeTaskManager;
+
+
 const int MAX_TASKS = 100;
 
 class HospitalTaskManager {
@@ -12,7 +17,10 @@ private:
     FibHeap<std::string> * taskHeap;
 
 public:
+
     HospitalTaskManager(FibHeap<std::string> * taskHeap): taskHeap(taskHeap){};
+
+    friend class VisualizeTaskManager;
 
     ~HospitalTaskManager() {
         while (!taskHeap->isEmpty()) {
@@ -45,7 +53,7 @@ public:
     }
 
     void completeHighestPriorityTask() {
-        Node<std::string> *highestPriorityTask = taskHeap->extractMin(); /////////////////
+        Node<std::string> *highestPriorityTask = taskHeap->extractMin();
 
         if (highestPriorityTask == nullptr) {
             std::cerr << "No tasks in the queue.\n";

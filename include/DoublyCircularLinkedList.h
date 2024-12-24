@@ -13,6 +13,11 @@ class FibHeap;
 class VisualizeFibonacciHeap;
 
 /**
+ * Forward declaration of VisualizeTaskManager class.
+ */
+class VisualizeTaskManager;
+
+/**
  * @brief A class representing a doubly circular linked list.
  *
  * This class is used as a part of the Fibonacci Heap implementation.
@@ -82,6 +87,7 @@ public:
     // Friend classes to allow access to private members
     friend class FibHeap<T>;
     friend class VisualizeFibonacciHeap;
+    friend class VisualizeTaskManager;
 };
 
 template<typename T>

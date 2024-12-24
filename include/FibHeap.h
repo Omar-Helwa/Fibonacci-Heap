@@ -28,24 +28,113 @@ private:
     int size; ///< Number of nodes in the heap.
     DoublyCircularLinkedList<T> rootList; ///< Root linked list.
 
+    /**
+     * @brief Links two nodes in the heap.
+     *
+     * @param y The node to be linked.
+     * @param x The node to which y will be linked.
+     */
     void link(Node<T> *y, Node<T> *x);
+
+    /**
+     * @brief Consolidates the heap to maintain the Fibonacci heap properties.
+     */
     void consolidate();
+
+    /**
+     * @brief Cuts a node from its parent and adds it to the root list.
+     *
+     * @param x The node to be cut.
+     * @param y The parent node.
+     */
     void cut(Node<T> *x, Node<T> *y);
+
+    /**
+     * @brief Performs a cascading cut operation.
+     *
+     * @param y The node to perform the cascading cut on.
+     */
     void cascadingCut(Node<T> *y);
+
+    /**
+     * @brief Searches for a node with a specific key starting from the given node.
+     *
+     * @param root The starting node for the search.
+     * @param key The key to search for.
+     * @return Node<T>* The node with the specified key, or nullptr if not found.
+     */
     Node<T> *search(Node<T> *root, int key) const;
 
 public:
     friend class VisualizeFibonacciHeap;
 
+    /**
+     * @brief Constructs a new Fibonacci Heap object.
+     */
     FibHeap();
+
+    /**
+     * @brief Inserts a node into the heap.
+     *
+     * @param x The node to be inserted.
+     */
     void insert(Node<T> *x);
+
+    /**
+     * @brief Extracts the minimum node from the heap.
+     *
+     * @return Node<T>* The minimum node.
+     */
     Node<T> *extractMin();
+
+    /**
+     * @brief Displays the minimum node in the heap.
+     *
+     * @return Node<T>* The minimum node.
+     */
     Node<T> *displayMinimum();
+
+    /**
+     * @brief Modifies the key of a node.
+     *
+     * @param k The current key of the node.
+     * @param new_k The new key to be assigned.
+     */
     void modifyKey(int k, int new_k);
+
+    /**
+     * @brief Deletes a node with a specific key from the heap.
+     *
+     * @param k The key of the node to be deleted.
+     */
     void deleteNode(int k);
+
+    /**
+     * @brief Displays the structure of the heap.
+     */
     void display();
+
+    /**
+     * @brief Finds a node with a specific key in the heap.
+     *
+     * @param key The key to search for.
+     * @return Node<T>* The node with the specified key, or nullptr if not found.
+     */
     Node<T> *find(int key) const;
+
+    /**
+     * @brief Checks if the heap is empty.
+     *
+     * @return true If the heap is empty.
+     * @return false If the heap is not empty.
+     */
     bool isEmpty();
+
+    /**
+     * @brief Gets the size of the heap.
+     *
+     * @return int The number of nodes in the heap.
+     */
     int getSize();
 };
 
@@ -151,22 +240,27 @@ template<typename T>
 Node<T> *FibHeap<T>::search(Node<T> *current, int key) const {
     if (current == nullptr)
         return nullptr;
+
     Node<T> *start = current;
     do {
         if (current->key == key) {
             return current;
         }
         if (current->child != nullptr) {
-            return search(current->child->head, key);
+            Node<T> *result = search(current->child->head, key);
+            if (result != nullptr) {
+                return result;
+            }
         }
         current = current->right;
     } while (current != start);
+
     return nullptr;
 }
 
 template<typename T>
 Node<T> *FibHeap<T>::find(int key) const {
-    return search(this->rootList.head, key);
+    return search(rootList.head, key);
 }
 
 template<typename T>
@@ -176,7 +270,7 @@ void FibHeap<T>::modifyKey(int currentNodeKey, int new_k) {
         std::cerr << "Node with key " << currentNodeKey << " not found." << std::endl;
         return;
     }
-    if (x != nullptr && new_k > x->key) {
+    if (x != nullptr && new_k > x->key) { // Cut from parent and insert into root list
         modifyKey(x->key, -1);
         Node<T>* mini = extractMin();
         mini->key = new_k;
@@ -191,7 +285,7 @@ void FibHeap<T>::modifyKey(int currentNodeKey, int new_k) {
         cascadingCut(y);
     }
     if (x->key < min->key) {
-        min = x;
+        min=x;
     }
 }
 

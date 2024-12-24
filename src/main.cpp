@@ -7,10 +7,17 @@
 // Include your Fibonacci Heap headers
 #include "FibHeap.h"
 #include "VisualizeFibonacciHeap.h"
-#include "Node.h"
 #include <string>
 
-int main(int, char**) {
+/**
+ * @brief Main function to initialize and run the Fibonacci Heap visualization.
+ *
+ * This function sets up the GLFW window, initializes Dear ImGui, and runs the main loop
+ * to visualize the Fibonacci Heap using Dear ImGui.
+ *
+ * @return int Returns 0 on successful execution, 1 on failure.
+ */
+int main(int, char **) {
     // Setup GLFW window
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -18,11 +25,11 @@ int main(int, char**) {
     }
 
     // GL 3.0 + GLSL 130
-    const char* glsl_version = "#version 130";
+    const char *glsl_version = "#version 130";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "Fibonacci Heap Visualization", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(1280, 720, "Fibonacci Heap Visualization", nullptr, nullptr);
     if (window == nullptr) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -30,12 +37,13 @@ int main(int, char**) {
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); // Enable vsync (optional)
+    glfwSwapInterval(1); // Enable vsync
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO &io = ImGui::GetIO();
+    (void) io;
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -49,8 +57,6 @@ int main(int, char**) {
 
     // Create an instance of the visualization class
     VisualizeFibonacciHeap visualizer;
-
-    // Create an instance of the HospitalTaskManaeger class
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {

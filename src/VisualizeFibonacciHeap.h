@@ -1,36 +1,60 @@
-// VisualizeFibonacciHeap.h
 #pragma once
 
 #include "imgui.h"
 #include "FibHeap.h"
 #include "Node.h"
+
 #include <string>
 #include <iostream>
 #include <cmath>
 
-class ImDrawList; // Forward declaration
+/**
+ * @class ImDrawList
+ * @brief Forward declaration of ImDrawList class.
+ */
+class ImDrawList;
+
 struct ImVec2;
 
+/**
+ * @class VisualizeFibonacciHeap
+ * @brief Class to visualize a Fibonacci Heap using Dear ImGui.
+ */
 class VisualizeFibonacciHeap {
 private:
-    const float nodeRadius = 30.0f;
-    // Constants
-    static const int MAX_NODES = 100;
+    const float nodeRadius = 30.0f; ///< Radius of the nodes in the visualization.
+    static const int MAX_NODES = 100; ///< Maximum number of nodes to visualize.
 
-    // Structures to store node positions and an array of nodes
+    /**
+    * @struct NodePositionPair
+    * @brief Structure to store a node and its position.
+    */
+
     typedef struct {
         Node<std::string> *first;
         ImVec2 second;
     } NodePositionPair;
+
+    /**
+     * @struct NodeArray
+     * @brief Structure to store an array of nodes.
+     */
 
     typedef struct {
         Node<std::string> *nodes[MAX_NODES];
         int count;
     } NodeArray;
 
-    // Helper functions (now private members of the class):
+    /**
+     * @brief Draws a node at the specified position.
+     * @param drawList Pointer to the ImDrawList.
+     * @param center Position of the node center.
+     * @param key Key value of the node.
+     * @param isMin Flag indicating if the node is the minimum node.
+     * @param isMarked Flag indicating if the node is marked.
+     * @param color Color of the node.
+     */
     void drawNode(ImDrawList *drawList, ImVec2 center, int key, bool isMin, bool isMarked, ImU32 color) {
-
         drawList->AddCircleFilled(center, nodeRadius, color);
 
         // Highlight the minimum node if specified
@@ -52,6 +76,13 @@ private:
         }
     }
 
+    /**
+     * @brief Draws links between a node and its children.
+     * @param drawList Pointer to the ImDrawList.
+     * @param node Pointer to the parent node.
+     * @param nodePositions Array of node positions.
+     * @param numPositions Number of node positions.
+     */
     void drawLinks(ImDrawList *drawList, Node<std::string> *node, NodePositionPair *nodePositions, int numPositions) {
         if (node == nullptr) return;
 
@@ -79,15 +110,25 @@ private:
                 float length = sqrt(direction.x * direction.x + direction.y * direction.y);
                 ImVec2 unitDirection = ImVec2(direction.x / length, direction.y / length);
 
-                ImVec2 start = ImVec2(parentPos.x + unitDirection.x * nodeRadius, parentPos.y + unitDirection.y * nodeRadius);
-                ImVec2 end = ImVec2(childPos.x - unitDirection.x * nodeRadius, childPos.y - unitDirection.y * nodeRadius);
+                ImVec2 start = ImVec2(parentPos.x + unitDirection.x * nodeRadius,
+                                      parentPos.y + unitDirection.y * nodeRadius);
+                ImVec2 end = ImVec2(childPos.x - unitDirection.x * nodeRadius,
+                                    childPos.y - unitDirection.y * nodeRadius);
 
-drawList->AddLine(start, end, IM_COL32(255, 255, 255, 255), 3.0f);
+                drawList->AddLine(start, end, IM_COL32(255, 255, 255, 255), 3.0f);
                 drawLinks(drawList, child, nodePositions, numPositions);
             }
         }
     }
 
+    /**
+     * @brief Calculates positions for the nodes.
+     * @param node Pointer to the current node.
+     * @param nodePositions Array of node positions.
+     * @param numPositions Reference to the number of node positions.
+     * @param parentPos Position of the parent node.
+     * @param canvasWidth Width of the canvas.
+     */
     void calculateNodePositions(Node<std::string> *node, NodePositionPair *nodePositions, int &numPositions,
                                 ImVec2 parentPos, float canvasWidth) {
         if (node == nullptr || node->child == nullptr) return;
@@ -108,6 +149,11 @@ drawList->AddLine(start, end, IM_COL32(255, 255, 255, 255), 3.0f);
         }
     }
 
+    /**
+     * @brief Gets the root nodes of the heap.
+     * @param heap Reference to the Fibonacci Heap.
+     * @return Array of root nodes.
+     */
     NodeArray getRoots(const FibHeap<std::string> &heap) {
         NodeArray roots = {{}, 0}; // Initialize NodeArray
         if (heap.min == nullptr) return roots;
@@ -125,6 +171,11 @@ drawList->AddLine(start, end, IM_COL32(255, 255, 255, 255), 3.0f);
         return roots;
     }
 
+    /**
+     * @brief Gets the children of a node.
+     * @param node Pointer to the parent node.
+     * @return Array of child nodes.
+     */
     NodeArray getChildren(Node<std::string> *node) {
         NodeArray children = {{}, 0}; // Initialize NodeArray
         if (node == nullptr || node->child == nullptr || node->child->head == nullptr) return children;
@@ -143,9 +194,16 @@ drawList->AddLine(start, end, IM_COL32(255, 255, 255, 255), 3.0f);
     }
 
 public:
+    /**
+     * @brief Default constructor.
+     */
     VisualizeFibonacciHeap() {
-    } // default constructor
+    }
 
+    /**
+     * @brief Visualizes the Fibonacci Heap.
+     * @param heap Reference to the Fibonacci Heap.
+     */
     void visualize(FibHeap<std::string> &heap) {
         ImGui::Begin("Fibonacci Heap Visualization");
 

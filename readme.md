@@ -1,6 +1,6 @@
 # Fibonacci Heap Visualization
 
-This project was developed as a group assignment for a university course. The team members collaborated to create a visualization tool for Fibonacci Heaps using C++ and the Dear ImGui library. The following GitHub usernames represent the contributors to this project: [@Omar-Helwa](https://github.com/Omar-Helwa) , [@PeterArsanious2004](https://github.com/PeterArsanious2004) , [@Ahmed-Fahmy00](https://github.com/Ahmed-Fahmy00) , [@Haithomianzz](https://github.com/Haithomianzz).
+This project was developed as a group assignment for a university course. The team members collaborated to create a visualization tool for Fibonacci Heaps using C++ and the Dear ImGui library. The following GitHub usernames represent the contributors to this project: [@Omar-Helwa](https://github.com/Omar-Helwa), [@PeterArsanious2004](https://github.com/PeterArsanious2004), [@Ahmed-Fahmy00](https://github.com/Ahmed-Fahmy00), [@Haithomianzz](https://github.com/Haithomianzz).
 
 We believe that the success of this project is a testament to our shared commitment to teamwork, open communication, and the equitable distribution of workload. We are proud of the collective effort we put forth and the knowledge we gained through this collaborative experience.
 
@@ -15,6 +15,7 @@ The main goal of this project was to create the Fibonacci Heap structure. A Fibo
 - **Modify Key**: Change the key of an existing node.
 - **Delete Node**: Remove a node with a specified key.
 - **Visualization**: Real-time visualization of the Fibonacci Heap structure.
+- **Task Management**: Manage tasks with priorities using the `HospitalTaskManager` class.
 
 ## Dependencies
 
@@ -32,6 +33,7 @@ The main goal of this project was to create the Fibonacci Heap structure. A Fibo
 2. **Interact with the GUI**:
     - Use the control panel to insert, modify, or delete nodes.
     - Visualize the changes in the Fibonacci Heap in real-time.
+    - Manage tasks with priorities using the `HospitalTaskManager` interface.
 
 ## Code Structure
 
@@ -40,6 +42,8 @@ The main goal of this project was to create the Fibonacci Heap structure. A Fibo
   - `DoublyCircularLinkedList.h`: Implementation of the Doubly Circular Linked List.
   - `Node.h`: Definition of the Node structure.
   - `VisualizeFibonacciHeap.h`: Visualization logic using Dear ImGui.
+  - `HospitalTaskManager.h`: Task management logic.
+  - `VisualizeTaskManager.h`: Visualization logic for task management using Dear ImGui.
 - `main.cpp`: Entry point of the application.
 
 ## Acknowledgements

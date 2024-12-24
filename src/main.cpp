@@ -50,6 +50,8 @@ int main(int, char**) {
     // Create an instance of the visualization class
     VisualizeFibonacciHeap visualizer;
 
+    // Create an instance of the HospitalTaskManaeger class
+
     // Main loop
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();

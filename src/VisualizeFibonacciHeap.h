@@ -6,29 +6,31 @@
 #include "Node.h"
 #include <string>
 #include <iostream>
+#include <cmath>
 
 class ImDrawList; // Forward declaration
 struct ImVec2;
 
 class VisualizeFibonacciHeap {
 private:
+    const float nodeRadius = 30.0f;
     // Constants
     static const int MAX_NODES = 100;
 
     // Structures to store node positions and an array of nodes
     typedef struct {
-        Node<std::string>* first;
+        Node<std::string> *first;
         ImVec2 second;
     } NodePositionPair;
 
     typedef struct {
-        Node<std::string>* nodes[MAX_NODES];
+        Node<std::string> *nodes[MAX_NODES];
         int count;
     } NodeArray;
 
     // Helper functions (now private members of the class):
-    void drawNode(ImDrawList* drawList, ImVec2 center, int key, bool isMin, bool isMarked, ImU32 color) {
-        const float nodeRadius = 20.0f;
+    void drawNode(ImDrawList *drawList, ImVec2 center, int key, bool isMin, bool isMarked, ImU32 color) {
+
         drawList->AddCircleFilled(center, nodeRadius, color);
 
         // Highlight the minimum node if specified
@@ -37,18 +39,20 @@ private:
         }
 
         // Convert the key to a string and display it
-        char keyStr[16];
+        char keyStr[20];
         snprintf(keyStr, sizeof(keyStr), "%d", key);
         ImVec2 textSize = ImGui::CalcTextSize(keyStr);
-        drawList->AddText(ImVec2(center.x - textSize.x * 0.5f, center.y - textSize.y * 0.5f), IM_COL32(0, 0, 0, 255), keyStr);
+        drawList->AddText(ImVec2(center.x - textSize.x * 0.5f, center.y - textSize.y * 0.5f), IM_COL32(0, 0, 0, 255),
+                          keyStr);
 
         // Display a mark if the node is marked
         if (isMarked) {
-            drawList->AddText(ImVec2(center.x + nodeRadius * 0.5f, center.y - nodeRadius * 0.5f), IM_COL32(255, 0, 0, 255), "M");
+            drawList->AddText(ImVec2(center.x + nodeRadius * 0.5f, center.y - nodeRadius * 0.5f),
+                              IM_COL32(255, 0, 0, 255), "M");
         }
     }
 
-    void drawLinks(ImDrawList* drawList, Node<std::string>* node, NodePositionPair* nodePositions, int numPositions) {
+    void drawLinks(ImDrawList *drawList, Node<std::string> *node, NodePositionPair *nodePositions, int numPositions) {
         if (node == nullptr) return;
 
         // Find the position of the current node
@@ -63,7 +67,7 @@ private:
         if (node->child) {
             NodeArray children = getChildren(node);
             for (int i = 0; i < children.count; i++) {
-                Node<std::string>* child = children.nodes[i];
+                Node<std::string> *child = children.nodes[i];
                 ImVec2 childPos;
                 for (int j = 0; j < numPositions; j++) {
                     if (nodePositions[j].first == child) {
@@ -71,13 +75,21 @@ private:
                     }
                 }
 
-                drawList->AddLine(parentPos, childPos, IM_COL32(0, 0, 0, 255), 2.0f);
+                ImVec2 direction = ImVec2(childPos.x - parentPos.x, childPos.y - parentPos.y);
+                float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+                ImVec2 unitDirection = ImVec2(direction.x / length, direction.y / length);
+
+                ImVec2 start = ImVec2(parentPos.x + unitDirection.x * nodeRadius, parentPos.y + unitDirection.y * nodeRadius);
+                ImVec2 end = ImVec2(childPos.x - unitDirection.x * nodeRadius, childPos.y - unitDirection.y * nodeRadius);
+
+drawList->AddLine(start, end, IM_COL32(255, 255, 255, 255), 3.0f);
                 drawLinks(drawList, child, nodePositions, numPositions);
             }
         }
     }
 
-    void calculateNodePositions(Node<std::string>* node, NodePositionPair* nodePositions, int& numPositions, ImVec2 parentPos, float canvasWidth) {
+    void calculateNodePositions(Node<std::string> *node, NodePositionPair *nodePositions, int &numPositions,
+                                ImVec2 parentPos, float canvasWidth) {
         if (node == nullptr || node->child == nullptr) return;
 
         NodeArray children = getChildren(node);
@@ -87,27 +99,25 @@ private:
         for (size_t i = 0; i < children.count; ++i) {
             if (numPositions < MAX_NODES) {
                 ImVec2 childPos = ImVec2(parentPos.x + (i * childSpacing), parentPos.y + 100);
-                nodePositions[numPositions++] = { children.nodes[i], childPos };
+                nodePositions[numPositions++] = {children.nodes[i], childPos};
                 calculateNodePositions(children.nodes[i], nodePositions, numPositions, childPos, canvasWidth);
-            }
-            else {
+            } else {
                 std::cerr << "Error: Maximum number of nodes reached in CalculateNodePositions." << std::endl;
                 return;
             }
         }
     }
 
-    NodeArray getRoots(const FibHeap<std::string>& heap) {
-        NodeArray roots = { {}, 0 }; // Initialize NodeArray
+    NodeArray getRoots(const FibHeap<std::string> &heap) {
+        NodeArray roots = {{}, 0}; // Initialize NodeArray
         if (heap.min == nullptr) return roots;
 
-        Node<std::string>* current = heap.min;
+        Node<std::string> *current = heap.min;
         do {
             if (roots.count < MAX_NODES) {
                 roots.nodes[roots.count++] = current;
                 current = current->right;
-            }
-            else {
+            } else {
                 std::cerr << "Error: Maximum number of nodes reached in getRoots." << std::endl;
                 break;
             }
@@ -115,17 +125,16 @@ private:
         return roots;
     }
 
-    NodeArray getChildren(Node<std::string>* node) {
-        NodeArray children = { {}, 0 }; // Initialize NodeArray
+    NodeArray getChildren(Node<std::string> *node) {
+        NodeArray children = {{}, 0}; // Initialize NodeArray
         if (node == nullptr || node->child == nullptr || node->child->head == nullptr) return children;
 
-        Node<std::string>* current = node->child->head;
+        Node<std::string> *current = node->child->head;
         do {
             if (children.count < MAX_NODES) {
                 children.nodes[children.count++] = current;
                 current = current->right;
-            }
-            else {
+            } else {
                 std::cerr << "Error: Maximum number of nodes reached in getChildren." << std::endl;
                 break;
             }
@@ -134,9 +143,10 @@ private:
     }
 
 public:
-    VisualizeFibonacciHeap() {} // default constructor
+    VisualizeFibonacciHeap() {
+    } // default constructor
 
-    void visualize(FibHeap<std::string>& heap) {
+    void visualize(FibHeap<std::string> &heap) {
         ImGui::Begin("Fibonacci Heap Visualization");
 
         // --- Control Panel ---
@@ -151,7 +161,7 @@ public:
         // Button to trigger insertion
         if (ImGui::Button("Insert")) {
             std::string nameStr(insertName);
-            Node<std::string>* node = new Node<std::string>(nameStr, insertValue);
+            Node<std::string> *node = new Node<std::string>(nameStr, insertValue);
             heap.insert(node);
         }
 
@@ -160,6 +170,7 @@ public:
         if (ImGui::Button("Extract-Min")) {
             heap.extractMin();
         }
+        ImGui::Separator();
 
         // Input controls for modifying a key
         static int modifyKey = 0;
@@ -172,8 +183,9 @@ public:
             heap.modifyKey(modifyKey, newValue);
         }
 
+        ImGui::Separator();
+
         // Input control for deleting a node
-        ImGui::SameLine();
         static int deleteKey = 0;
         ImGui::InputInt("Delete Key", &deleteKey);
 
@@ -188,7 +200,7 @@ public:
         ImGui::Text("Fibonacci Heap");
 
         // Get ImGui's draw list
-        ImDrawList* drawList = ImGui::GetWindowDrawList();
+        ImDrawList *drawList = ImGui::GetWindowDrawList();
         ImVec2 canvasPos = ImGui::GetCursorScreenPos(); // Top-left of the drawing area
         ImVec2 canvasSize = ImGui::GetContentRegionAvail();
 
@@ -201,8 +213,9 @@ public:
         // Calculate positions for the root nodes
         float rootSpacing = canvasSize.x / (roots.count + 1);
         for (size_t i = 0; i < roots.count; ++i) {
-            ImVec2 rootPos = ImVec2(canvasPos.x + rootSpacing * (i + 1), canvasPos.y + 50); // Adjust vertical position as needed
-            nodePositions[numPositions++] = { roots.nodes[i], rootPos };
+            ImVec2 rootPos = ImVec2(canvasPos.x + rootSpacing * (i + 1), canvasPos.y + 50);
+            // Adjust vertical position as needed
+            nodePositions[numPositions++] = {roots.nodes[i], rootPos};
 
             // Recursively calculate positions of children
             calculateNodePositions(roots.nodes[i], nodePositions, numPositions, rootPos, canvasSize.x);
@@ -210,10 +223,10 @@ public:
 
         // Draw the nodes
         for (int i = 0; i < numPositions; i++) {
-            Node<std::string>* node = nodePositions[i].first;
+            Node<std::string> *node = nodePositions[i].first;
             ImVec2 position = nodePositions[i].second;
 
-            drawNode(drawList, position, node->getKey(), node == heap.min, node->mark, IM_COL32(255, 255, 255, 255));
+            drawNode(drawList, position, node->getKey(), node == heap.min, node->mark, IM_COL32(51, 255, 255, 255));
         }
 
         // Draw links between nodes

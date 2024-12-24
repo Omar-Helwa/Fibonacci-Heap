@@ -13,6 +13,7 @@ add_executable(FibonacciHeapGUI
         include/DoublyCircularLinkedList.h
         include/FibHeap.h
         include/Node.h
+        include/HospitalTaskManager.h
 )
 
 # --- ImGui ---

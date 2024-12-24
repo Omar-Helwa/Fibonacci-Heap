@@ -12,7 +12,8 @@ add_executable(FibonacciHeapGUI
         src/VisualizeFibonacciHeap.h
         include/DoublyCircularLinkedList.h
         include/FibHeap.h
-        include/Node.h)
+        include/Node.h
+)
 
 # --- ImGui ---
 add_library(imgui STATIC

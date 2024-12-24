@@ -42,10 +42,50 @@ public:
         ImGui::Text("Number of Tasks: %d", manager.countTasks());
 
         // Button to display all tasks
+        static bool showTasks = false;
         if (ImGui::Button("Display Tasks")) {
-            manager.displayTasks();
+            showTasks = !showTasks;
         }
+
+        // Conditionally display the tasks table
+        if (showTasks) {
+            displayTasks(manager);
+        }
+
         ImGui::End();
+    }
+
+private:
+    void displayTasks(HospitalTaskManager &manager) {
+        if (ImGui::BeginTable("TasksTable", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
+            // Set up the headers
+            ImGui::TableSetupColumn("Task Name");
+            ImGui::TableSetupColumn("Priority");
+            ImGui::TableHeadersRow();
+
+            // Display each task in the table
+            traverseHeap(manager.taskHeap->displayMinimum());
+
+            ImGui::EndTable();
+        }
+    }
+
+    void traverseHeap(Node<std::string> *node) {
+        if (!node) return;
+
+        Node<std::string> *start = node;
+        do {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("%s", node->getName().c_str());
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("%d", node->getKey());
+
+            if (node->child) {
+                traverseHeap(node->child->head);
+            }
+            node = node->right;
+        } while (node != start);
     }
 };
 

@@ -8,6 +8,7 @@
 #include "FibHeap.h"
 #include "HospitalTaskManager.h"
 #include "VisualizeFibonacciHeap.h"
+#include "VisualizeTaskManager.h"
 #include <string>
 
 /**
@@ -60,7 +61,11 @@ int main(int, char **) {
     VisualizeFibonacciHeap visualizer;
 
     // Create an instance of the HospitalTaskManager
-    HospitalTaskManager taskManager;
+    HospitalTaskManager taskManager(&myHeap);
+
+    // Create an instance of the HospitalTaskManager
+    VisualizeTaskManager manager;
+
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
@@ -73,47 +78,8 @@ int main(int, char **) {
 
         // Call your visualization function
         visualizer.visualize(myHeap);
+        manager.visualize(taskManager);
 
-        // Create a new ImGui window for HospitalTaskManager
-        ImGui::Begin("Hospital Task Manager");
-
-        // Input controls for adding a task
-        static int taskPriority = 0;
-        static char taskDescription[128] = "";
-        ImGui::InputText("Description", taskDescription, IM_ARRAYSIZE(taskDescription));
-        ImGui::InputInt("Priority", &taskPriority);
-
-        // Button to add a task
-        if (ImGui::Button("Add Task")) {
-            std::string descriptionStr(taskDescription);
-            taskManager.addTask(descriptionStr, taskPriority);
-        }
-
-        // Button to complete the highest priority task
-        if (ImGui::Button("Complete Highest Priority Task")) {
-            taskManager.completeHighestPriorityTask();
-        }
-
-        // Input controls for updating a task's priority
-        static int oldPriority = 0;
-        static int newPriority = 0;
-        ImGui::InputInt("Old Priority", &oldPriority);
-        ImGui::InputInt("New Priority", &newPriority);
-
-        // Button to update a task's priority
-        if (ImGui::Button("Update Task Priority")) {
-            taskManager.updateTaskPriority(oldPriority, newPriority);
-        }
-
-        // Display the number of tasks
-        ImGui::Text("Number of Tasks: %d", taskManager.countTasks());
-
-        // Button to display all tasks
-        if (ImGui::Button("Display Tasks")) {
-            taskManager.displayTasks();
-        }
-
-        ImGui::End();
 
         // Rendering
         ImGui::Render();

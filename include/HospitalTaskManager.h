@@ -9,12 +9,14 @@ const int MAX_TASKS = 100;
 
 class HospitalTaskManager {
 private:
-    FibHeap<std::string> taskHeap;
+    FibHeap<std::string> * taskHeap;
 
 public:
+    HospitalTaskManager(FibHeap<std::string> * taskHeap): taskHeap(taskHeap){};
+
     ~HospitalTaskManager() {
-        while (!taskHeap.isEmpty()) {
-            Node<std::string> *task = taskHeap.extractMin();
+        while (!taskHeap->isEmpty()) {
+            Node<std::string> *task = taskHeap->extractMin();
             delete task;
         }
     }
@@ -24,7 +26,7 @@ public:
             std::cerr << "Priority must be a positive integer.\n";
             return;
         }
-        if (taskHeap.find(priority) != nullptr) {
+        if (taskHeap->find(priority) != nullptr) {
             std::cerr << "Task with the same priority already exists.\n";
             return;
         }
@@ -33,17 +35,17 @@ public:
             std::cerr << "Description cannot be empty or more than 50 characters.\n";
             return;
         }
-        if (taskHeap.getSize() >= MAX_TASKS) {
+        if (taskHeap->getSize() >= MAX_TASKS) {
             std::cerr << "Task queue is full.\n";
             return;
         }
         Node<std::string> *newNode = new Node<std::string>(description, priority);
-        taskHeap.insert(newNode);
+        taskHeap->insert(newNode);
         std::cout << "Task added: " << description << " (Priority: " << priority << ")\n";
     }
 
     void completeHighestPriorityTask() {
-        Node<std::string> *highestPriorityTask = taskHeap.extractMin(); /////////////////
+        Node<std::string> *highestPriorityTask = taskHeap->extractMin(); /////////////////
 
         if (highestPriorityTask == nullptr) {
             std::cerr << "No tasks in the queue.\n";
@@ -55,7 +57,7 @@ public:
     }
 
     void updateTaskPriority(int oldPriority, int newPriority) {
-        Node<std::string> *taskNode = taskHeap.find(oldPriority);
+        Node<std::string> *taskNode = taskHeap->find(oldPriority);
         if (taskNode == nullptr) {
             std::cerr << "Task not found.\n";
             return;
@@ -68,23 +70,23 @@ public:
             std::cerr << "New priority is the same as the old priority.\n";
             return;
         }
-        if (taskHeap.find(newPriority) != nullptr) {
+        if (taskHeap->find(newPriority) != nullptr) {
             std::cerr << "Task with new priority already exists.\n";
             return;
         }
-        taskHeap.modifyKey(taskNode->getKey(), newPriority);
+        taskHeap->modifyKey(taskNode->getKey(), newPriority);
         std::cout << "Task priority updated: " << taskNode->getName() << " (Old Priority: " << oldPriority <<
                 ", New Priority: " << newPriority << ")\n";
     }
 
     int countTasks() {
-        return taskHeap.getSize();
+        return taskHeap->getSize();
     }
 
     void displayTasks() {
-        std::cout << "Number of Tasks: " << taskHeap.getSize() << std::endl;
-        taskHeap.display();
+        std::cout << "Number of Tasks: " << taskHeap->getSize() << std::endl;
+        taskHeap->display();
     }
 };
 
-#endif // HOSPITALTASKMANAGER_H
+#endif

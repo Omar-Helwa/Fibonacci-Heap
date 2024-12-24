@@ -14,6 +14,7 @@ add_executable(FibonacciHeapGUI
         include/FibHeap.h
         include/Node.h
         include/HospitalTaskManager.h
+        src/VisualizeTaskManager.h
 )
 
 # --- ImGui ---

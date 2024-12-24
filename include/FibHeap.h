@@ -1,10 +1,11 @@
 #ifndef FIBHEAP_H
 #define FIBHEAP_H
+
 #include <functional>
 #include <iostream>
 #include "DoublyCircularLinkedList.h"
 
-
+// Forward declarations
 template<typename T>
 class Node;
 
@@ -17,6 +18,8 @@ class VisualizeFibonacciHeap;
  * This class provides the implementation of a Fibonacci Heap, including
  * operations such as insertion, merging, extracting the minimum, and
  * decreasing or increasing keys.
+ *
+ * @tparam T The type of data stored in the heap nodes.
  */
 template<typename T>
 class FibHeap {
@@ -25,131 +28,31 @@ private:
     int size; ///< Number of nodes in the heap.
     DoublyCircularLinkedList<T> rootList; ///< Root linked list.
 
-
-    /**
-   * @brief Links two trees of the same degree.
-   * @param y Pointer to the first node.
-   * @param x Pointer to the second node.
-   * @pre Both nodes y and x must be non-null and have the same degree.
-   * @post Node y is linked to node x as a child.
-   */
     void link(Node<T> *y, Node<T> *x);
-
-    /**
-    * @brief Consolidates the heap by combining trees of the same degree.
-    * @pre The heap must not be empty.
-    * @post The heap is consolidated, and trees of the same degree are combined.
-    */
     void consolidate();
-
-
-    /**
-    * @brief Cuts the link between a node and its parent, making it a root.
-    * @param x Pointer to the node to be cut.
-    * @param y Pointer to the parent node.
-    * @pre Both nodes x and y must be non-null, and x must be a child of y.
-    * @post Node x is cut from its parent y and becomes a root.
-    */
     void cut(Node<T> *x, Node<T> *y);
-
-    /**
-     * @brief Performs a cascading cut operation.
-     * @param y Pointer to the node to start the cascading cut.
-     * @pre Node y must be non-null.
-     * @post Cascading cut is performed starting from node y.
-     */
     void cascadingCut(Node<T> *y);
-
-    /**
-    * @brief Searches for a node with a specific key in the heap.
-    * @param root Pointer to the root node to start the search.
-    * @param key The key value to search for.
-    * @return Pointer to the node with the specified key, or nullptr if not found.
-    * @pre The heap must not be empty.
-    * @post The node with the specified key is returned if found, otherwise nullptr.
-    */
     Node<T> *search(Node<T> *root, int key) const;
 
 public:
-
     friend class VisualizeFibonacciHeap;
 
-    /**
-     * @brief Default constructor to initialize an empty Fibonacci Heap.
-     * @pre None.
-     * @post An empty Fibonacci Heap is created.
-     */
-    FibHeap() : min(nullptr), size(0) {
-    }
-
-    /**
-     * @brief Inserts a node into the heap.
-     * @param x Pointer to the node to be inserted.
-     * @pre Node x must be non-null.
-     * @post Node x is inserted into the heap.
-     */
+    FibHeap();
     void insert(Node<T> *x);
-
-    /**
-     * @brief Extracts the minimum node from the heap.
-     * @return Pointer to the node with the minimum key.
-     * @pre The heap must not be empty.
-     * @post The minimum node is removed from the heap.
-     */
     Node<T> *extractMin();
-
-    /**
-     * @brief Displays the minimum node in the heap.
-     * @return Pointer to the node with the minimum key.
-     * @pre The heap must not be empty.
-     * @post The minimum node is displayed.
-     */
     Node<T> *displayMinimum();
-
-    /**
-     * @brief Decreases the key of a node.
-     * @param x Pointer to the node.
-     * @param k The new key value.
-     * @pre Node x must be non-null, and k must be less than the current key of x.
-     * @post The key of node x is decreased to k.
-     */
     void modifyKey(int k, int new_k);
-
-    /**
-     * @brief Deletes a node from the heap.
-     * @param x Pointer to the node to be deleted.
-     * @pre Node x must be non-null.
-     * @post Node x is deleted from the heap.
-     */
     void deleteNode(int k);
-
     void display();
-
-    /**
-   * @brief Finds a node with a specific key in the heap.
-   * @param key The key value to search for.
-   * @return Pointer to the node with the specified key, or nullptr if not found.
-   * @pre The heap must not be empty.
-   * @post The node with the specified key is returned if found, otherwise nullptr.
-   */
     Node<T> *find(int key) const;
-
-        /**
-     * @brief Finds a node with a specific key in the heap.
-     * @param key The key value to search for.
-     * @return Pointer to the node with the specified key, or nullptr if not found.
-     * @pre The heap must not be empty.
-     * @post The node with the specified key is returned if found, otherwise nullptr.
-     */
     bool isEmpty();
-
-        /**
-     * @brief Gets the size of the heap.
-     * @return size of the heap
-     */
     int getSize();
-
 };
+
+// Implementation of the FibHeap template class
+
+template<typename T>
+FibHeap<T>::FibHeap() : min(nullptr), size(0) {}
 
 template<typename T>
 void FibHeap<T>::insert(Node<T> *x) {
@@ -172,14 +75,13 @@ Node<T> *FibHeap<T>::extractMin() {
     if (minptr->child != nullptr) {
         int numChildren = minptr->child->size;
         for (int i = 0; i < numChildren; i++) {
-            // Add children of minptr to the root list
             Node<T> *child = minptr->child->head;
             minptr->child->remove(child);
             rootList.insert(child);
             child->parent = nullptr;
         }
     }
-    minptr->left->right = minptr->right; // Remove minptr from the root list
+    minptr->left->right = minptr->right;
     minptr->right->left = minptr->left;
     if (minptr == minptr->right) {
         min = nullptr;
@@ -198,9 +100,10 @@ template<typename T>
 bool FibHeap<T>::isEmpty() {
     return size == 0;
 }
+
 template<typename T>
 void FibHeap<T>::consolidate() {
-    const int fibsize = 45; // Maximum degree of a node in a Fibonacci heap
+    const int fibsize = 45;
     Node<T> *A[fibsize];
     Node<T> *x = min;
     for (int i = 0; i < fibsize; i++)
@@ -224,7 +127,7 @@ void FibHeap<T>::consolidate() {
         x = x->right;
     }
     min = nullptr;
-    rootList = DoublyCircularLinkedList<T>(); // Initialize new root list to be filled with the consolidated nodes
+    rootList = DoublyCircularLinkedList<T>();
     for (int i = 0; i < fibsize; i++) {
         if (A[i] != nullptr){
             rootList.insert(A[i]);
@@ -254,7 +157,7 @@ Node<T> *FibHeap<T>::search(Node<T> *current, int key) const {
             return current;
         }
         if (current->child != nullptr) {
-            return search(current->child->head, key); // Start search from the head of the child list
+            return search(current->child->head, key);
         }
         current = current->right;
     } while (current != start);
@@ -273,14 +176,13 @@ void FibHeap<T>::modifyKey(int currentNodeKey, int new_k) {
         std::cerr << "Node with key " << currentNodeKey << " not found." << std::endl;
         return;
     }
-    if (x != nullptr && new_k > x->key) { // Cut from parent and insert into root list
+    if (x != nullptr && new_k > x->key) {
         modifyKey(x->key, -1);
         Node<T>* mini = extractMin();
         mini->key = new_k;
         insert(mini);
         return;
     }
-
 
     x->key = new_k;
     Node<T> *y = x->parent;
@@ -289,9 +191,10 @@ void FibHeap<T>::modifyKey(int currentNodeKey, int new_k) {
         cascadingCut(y);
     }
     if (x->key < min->key) {
-        min=x;
+        min = x;
     }
 }
+
 template<typename T>
 void FibHeap<T>::cut(Node<T> *x, Node<T> *y) {
     y->child->remove(x);
@@ -313,7 +216,6 @@ void FibHeap<T>::cascadingCut(Node<T> *y) {
     }
 }
 
-
 template<typename T>
 void FibHeap<T>::deleteNode(int key) {
     Node<T> *x = find(key);
@@ -326,12 +228,10 @@ void FibHeap<T>::deleteNode(int key) {
     std::cout << "Deleted node with key " << key << std::endl;
 }
 
-
 template<typename T>
 Node<T> *FibHeap<T>::displayMinimum() {
     return this->min;
 }
-
 
 template<typename T>
 void FibHeap<T>::display() {
@@ -340,7 +240,7 @@ void FibHeap<T>::display() {
         return;
     }
 
-    std::function<void(Node<T>, int)> displayNode = [&](Node<T> node, int level) {
+    std::function<void(Node<T>*, int)> displayNode = [&](Node<T>* node, int level) {
         if (!node) return;
         Node<T>* start = node;
         do {
@@ -355,8 +255,10 @@ void FibHeap<T>::display() {
 
     displayNode(rootList.head, 0);
 }
+
 template<typename T>
 int FibHeap<T>::getSize() {
     return size;
 }
-#endif//FIBHEAP_H
+
+#endif // FIBHEAP_H

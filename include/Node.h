@@ -1,16 +1,31 @@
 #pragma once
 
-template <typename T>
+/**
+ * @class FibHeap
+ * @brief Forward declaration of FibHeap class template.
+ * @tparam T The type of data stored in the node.
+ */
+template<typename T>
 class FibHeap;
 
-template <typename T>
+/**
+ * @class DoublyCircularLinkedList
+ * @brief Forward declaration of DoublyCircularLinkedList class template.
+ * @tparam T The type of data stored in the node.
+ */
+template<typename T>
 class DoublyCircularLinkedList;
 
+/**
+ * @class VisualizeFibonacciHeap
+ * @brief Forward declaration of VisualizeFibonacciHeap class.
+ */
 class VisualizeFibonacciHeap;
 
 /**
  * @class Node
  * @brief Represents a node in a doubly linked list.
+ * @tparam T The type of data stored in the node.
  */
 template<typename T>
 class Node {
@@ -30,9 +45,7 @@ public:
      * @param Name The name to be assigned to the node.
      * @param key The key value to be assigned to the node.
      */
-    Node(T Name, int key) : key(key), Name(Name), deg(0), parent(nullptr), child(nullptr),
-                            left(this), right(this), mark(false) {
-    }
+    Node(T Name, int key);
 
     /**
      * @brief Default destructor.
@@ -40,31 +53,33 @@ public:
     ~Node();
 
     /**
-     * @brief Friend class declaration.
-     */
-    friend class DoublyCircularLinkedList<T>;
-    friend class VisualizeFibonacciHeap;
-
-    // friend class FibHeap<T>;
-
-    /**
      * @brief Gets the key value of the node.
      * @return The key value of the node.
      */
     int getKey() const;
+
     /**
      * @brief Gets the name of the node.
      * @return The name of the node.
      */
     T getName() const;
+
     /**
      * @brief Gets the degree of the node.
-     * @return The name of the node.
+     * @return The degree of the node.
      */
     int getDeg() const;
-    friend class FibHeap<T>;
+
+    // Friend class declarations
     friend class DoublyCircularLinkedList<T>;
+    friend class VisualizeFibonacciHeap;
+    friend class FibHeap<T>;
 };
+
+template<typename T>
+Node<T>::Node(T Name, int key) : key(key), Name(Name), deg(0), parent(nullptr), child(nullptr),
+                                 left(this), right(this), mark(false) {
+}
 
 template<typename T>
 Node<T>::~Node() = default;
@@ -73,10 +88,12 @@ template<typename T>
 int Node<T>::getKey() const {
     return key;
 }
+
 template<typename T>
 int Node<T>::getDeg() const {
     return deg;
 }
+
 template<typename T>
 T Node<T>::getName() const {
     return Name;

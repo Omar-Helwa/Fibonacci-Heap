@@ -3,6 +3,7 @@
 #include "imgui.h"
 #include "FibHeap.h"
 #include "Node.h"
+#include "flag_env.h"
 
 #include <string>
 #include <iostream>
@@ -263,49 +264,55 @@ public:
         // --- Control Panel ---
         ImGui::Text("Controls");
 
-        // Input controls for inserting a node
-        static int insertValue = 0;
-        static char insertName[128] = "";
-        ImGui::InputText("Name", insertName, IM_ARRAYSIZE(insertName));
-        ImGui::InputInt("Key", &insertValue);
-
-        // Button to trigger insertion
-        if (ImGui::Button("Insert")) {
-            std::string nameStr(insertName);
-            Node<std::string> *node = new Node<std::string>(nameStr, insertValue);
-            heap.insert(node);
+        if (ImGui::Button("Verbos - Development")) {
+            FLAG ? FLAG = false : FLAG = true;
         }
 
-        // Button to extract the minimum node
-        ImGui::SameLine();
-        if (ImGui::Button("Extract-Min")) {
-            heap.extractMin();
+        if(FLAG) {
+            // Input controls for inserting a node
+            static int insertValue = 0;
+            static char insertName[128] = "";
+            ImGui::InputText("Name", insertName, IM_ARRAYSIZE(insertName));
+            ImGui::InputInt("Key", &insertValue);
+
+            // Button to trigger insertion
+            if (ImGui::Button("Insert")) {
+                std::string nameStr(insertName);
+                Node<std::string> *node = new Node<std::string>(nameStr, insertValue);
+                heap.insert(node);
+            }
+
+            // Button to extract the minimum node
+            ImGui::SameLine();
+            if (ImGui::Button("Extract-Min")) {
+                heap.extractMin();
+            }
+            ImGui::Separator();
+
+            // Input controls for modifying a key
+            static int modifyKey = 0;
+            static int newValue = 0;
+            ImGui::InputInt("Key to Modify", &modifyKey);
+            ImGui::InputInt("New Key Value", &newValue);
+
+            // Button to trigger key modification
+            if (ImGui::Button("Modify Key")) {
+                heap.modifyKey(modifyKey, newValue);
+            }
+
+            ImGui::Separator();
+
+            // Input control for deleting a node
+            static int deleteKey = 0;
+            ImGui::InputInt("Delete Key", &deleteKey);
+
+            // Button to trigger deletion
+            if (ImGui::Button("Delete")) {
+                heap.deleteNode(deleteKey);
+            }
+
+            ImGui::Separator();
         }
-        ImGui::Separator();
-
-        // Input controls for modifying a key
-        static int modifyKey = 0;
-        static int newValue = 0;
-        ImGui::InputInt("Key to Modify", &modifyKey);
-        ImGui::InputInt("New Key Value", &newValue);
-
-        // Button to trigger key modification
-        if (ImGui::Button("Modify Key")) {
-            heap.modifyKey(modifyKey, newValue);
-        }
-
-        ImGui::Separator();
-
-        // Input control for deleting a node
-        static int deleteKey = 0;
-        ImGui::InputInt("Delete Key", &deleteKey);
-
-        // Button to trigger deletion
-        if (ImGui::Button("Delete")) {
-            heap.deleteNode(deleteKey);
-        }
-
-        ImGui::Separator();
 
         // --- Visualization Area ---
         ImGui::Text("Fibonacci Heap");

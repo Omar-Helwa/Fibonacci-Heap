@@ -3,9 +3,22 @@
 
 #include <string>
 #include <array>
+#include <chrono>
+#include <vector>
+
+//Forward Decleration
+class VisualizeTaskManager;
 
 class error_handler {
 private:
+
+    struct TimedMessage {
+        std::string message;
+        std::chrono::steady_clock::time_point endTime;
+    };
+
+    std::vector<TimedMessage> activeMessages;
+
     std::array<std::string, 3> const errorClass = {
         "Hospital Task Manager: ", // ID: 0
         "Fibonacci Heap: ", // ID: 1
@@ -23,9 +36,17 @@ private:
         "Heap Tree Empty.\n", // ID: 8
     };
 
+    void addErrorMessage(const std::string& message, int durationMS);
+    void renderErrorMessages();
+
 public:
+
+    friend class VisualizeTaskManager;
+
     void e_log(int id);
     void verbose_log( int classID, std::string msg);
+
+
 };
 
 

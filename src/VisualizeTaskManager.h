@@ -8,10 +8,10 @@ class VisualizeTaskManager {
 public:
     void visualize(HospitalTaskManager &manager) {
         // Set global font scale
-        ImGui::GetIO().FontGlobalScale = 3.0f; // Increase font size globally
+        // ImGui::GetIO().FontGlobalScale = 3.0f; // Increase font size globally
 
         // Set a larger window size
-        ImGui::SetNextWindowSize(ImVec2(1270, 500), ImGuiCond_FirstUseEver);
+        // ImGui::SetNextWindowSize(ImVec2(1270, 500), ImGuiCond_FirstUseEver);
         ImGui::Begin("Hospital Task Manager");
 
         // Get the available content region size
@@ -29,42 +29,42 @@ public:
         // ImGui::PopItemWidth();
 
         // Button to add a task
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
-        if (ImGui::Button("Add Task", ImVec2(contentRegion.x * 0.2f, 70))) {
+        // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
+        if (ImGui::Button("Add Task")) {
             // 40% width, 70px height
             std::string descriptionStr(taskDescription);
             manager.addTask(descriptionStr, taskPriority);
         }
-        ImGui::PopStyleVar();
+        // ImGui::PopStyleVar();
 
         ImGui::SameLine();
         // Button to complete the highest priority task
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
-        if (ImGui::Button("Complete Highest Priority Task", ImVec2(contentRegion.x * 0.2f, 70))) {
+        // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
+        if (ImGui::Button("Complete Highest Priority Task")) {
             // 50% width, 70px height
             manager.completeHighestPriorityTask();
         }
-        ImGui::PopStyleVar();
+        // ImGui::PopStyleVar();
 
         ImGui::Separator();
 
         // Input controls for updating a task's priority
         static int oldPriority = 0;
         static int newPriority = 0;
-        ImGui::PushItemWidth(contentRegion.x * 0.2f); // 30% of the content region width
+        // ImGui::PushItemWidth(contentRegion.x * 0.2f); // 30% of the content region width
         ImGui::InputInt("Old Priority", &oldPriority);
-        ImGui::PopItemWidth();
-        ImGui::PushItemWidth(contentRegion.x * 0.2f); // 30% of the content region width
+        // ImGui::PopItemWidth();
+        // ImGui::PushItemWidth(contentRegion.x * 0.2f); // 30% of the content region width
         ImGui::InputInt("New Priority", &newPriority);
-        ImGui::PopItemWidth();
+        // ImGui::PopItemWidth();
 
         // Button to update a task's priority
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
-        if (ImGui::Button("Update Task Priority", ImVec2(contentRegion.x * 0.2f, 70))) {
+        // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
+        if (ImGui::Button("Update Task Priority")) {
             // 50% width, 70px height
             manager.updateTaskPriority(oldPriority, newPriority);
         }
-        ImGui::PopStyleVar();
+        // ImGui::PopStyleVar();
 
         ImGui::Separator();
 
@@ -73,12 +73,12 @@ public:
 
         // Button to display all tasks
         static bool showTasks = false;
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
-        if (ImGui::Button("Display Tasks", ImVec2(contentRegion.x * 0.2f, 70))) {
+        // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
+        if (ImGui::Button("Display Tasks")) {
             // 50% width, 70px height
             showTasks = !showTasks;
         }
-        ImGui::PopStyleVar();
+        // ImGui::PopStyleVar();
 
         // Conditionally display the tasks table
         if (showTasks) {

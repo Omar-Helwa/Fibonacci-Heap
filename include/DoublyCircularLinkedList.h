@@ -55,7 +55,7 @@ public:
      * @param Name The name associated with the new node.
      * @param key The key associated with the new node.
      */
-    void insert(T Name, int key);
+    // void insert(T Name, int key);
 
     /**
      * @brief Deletes the specified node from the list.
@@ -123,11 +123,11 @@ void DoublyCircularLinkedList<T>::insert(Node<T> *newNode) {
     size++;
 }
 
-template<typename T>
-void DoublyCircularLinkedList<T>::insert(T Name, int key) {
-    auto *newNode = new Node<T>(Name, key);
-    insert(newNode); // Call the private insert function
-}
+// template<typename T>
+// void DoublyCircularLinkedList<T>::insert(T Name, int key) {
+//     auto *newNode = new Node<T>(Name, key);
+//     insert(newNode); // Call the private insert function
+// }
 
 template<typename T>
 void DoublyCircularLinkedList<T>::deleteNode(Node<T> *curr) {

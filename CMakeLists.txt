@@ -17,7 +17,7 @@ add_executable(FibonacciHeapGUI
         src/VisualizeTaskManager.h
         src/_env.h
         src/error_handler.cpp
-        src/error_handler.h
+        include/error_handler.h
 )
 
 # --- ImGui ---

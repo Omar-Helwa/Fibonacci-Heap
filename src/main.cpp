@@ -62,7 +62,7 @@ int main(int, char **) {
     FibHeap<std::string> myHeap(&handler);
 
     // Create an instance of the visualization class
-    VisualizeFibonacciHeap visualizer;
+    VisualizeFibonacciHeap visualizer(&handler);
 
     // Create an instance of the HospitalTaskManager
     HospitalTaskManager taskManager(&myHeap, &handler);

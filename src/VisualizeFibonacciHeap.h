@@ -4,6 +4,7 @@
 #include "FibHeap.h"
 #include "Node.h"
 #include "_env.h"
+#include "error_handler.h"
 
 #include <string>
 #include <iostream>
@@ -23,6 +24,9 @@ struct ImVec2;
  */
 class VisualizeFibonacciHeap {
 private:
+
+    error_handler * handler;
+
     /**
     * @struct NodePositionPair
     * @brief Structure to store a node and its position.
@@ -194,7 +198,7 @@ private:
                 nodePositions[numPositions++] = {children.nodes[i], childPos};
                 calculateNodePositions(children.nodes[i], nodePositions, numPositions, childPos, canvasWidth);
             } else {
-                std::cerr << "Error: Maximum number of nodes reached in CalculateNodePositions." << std::endl;
+                handler->e_log(4, "Maximum number of nodes reached in CalculateNodePositions.");
                 return;
             }
         }
@@ -215,7 +219,7 @@ private:
                 roots.nodes[roots.count++] = current;
                 current = current->right;
             } else {
-                std::cerr << "Error: Maximum number of nodes reached in getRoots." << std::endl;
+                handler->e_log(4,"Maximum number of nodes reached in getRoots." );
                 break;
             }
         } while (current != heap.min);
@@ -237,7 +241,7 @@ private:
                 children.nodes[children.count++] = current;
                 current = current->right;
             } else {
-                std::cerr << "Error: Maximum number of nodes reached in getChildren." << std::endl;
+                handler->e_log(4, "Maximum number of nodes reached in getChildren.");
                 break;
             }
         } while (current != node->child->head);
@@ -248,8 +252,7 @@ public:
     /**
      * @brief Default constructor.
      */
-    VisualizeFibonacciHeap() {
-    }
+    VisualizeFibonacciHeap(error_handler * handler): handler(handler) {};
 
     /**
      * @brief Visualizes the Fibonacci Heap.

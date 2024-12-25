@@ -16,7 +16,12 @@ void error_handler::e_log(int id) {
     addErrorMessage(errorClass[classID] + errorMessages[errorID], 4000);
 }
 
-void error_handler::verbose_log(int classID, std::string msg) {
+void error_handler::e_log(int id, std::string msg) {
+    std::cerr << std::endl << errorClass[id] + msg;
+    addErrorMessage(errorClass[id] + msg, 4000);
+}
+
+void error_handler::verbose_log(int classID, std::string msg) const {
     if (FLAG_VERBOSE) {
         std::cout << std::endl << errorClass[classID] + msg;
     }

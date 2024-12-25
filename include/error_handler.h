@@ -6,9 +6,6 @@
 #include <chrono>
 #include <vector>
 
-//Forward Decleration
-class VisualizeTaskManager;
-
 class error_handler {
 private:
 
@@ -19,10 +16,11 @@ private:
 
     std::vector<TimedMessage> activeMessages;
 
-    std::array<std::string, 3> const errorClass = {
+    std::array<std::string, 4> const errorClass = {
         "Hospital Task Manager: ", // ID: 0
         "Fibonacci Heap: ", // ID: 1
-        "Doubly Circular Linked List: " // ID: 2
+        "Doubly Circular Linked List: ", // ID: 2
+        "VisualizeFibboacciHeap", // ID: 3
     };
     std::array<std::string, 30> const errorMessages = {
         "Priority must be a positive integer.\n", // ID: 0
@@ -37,14 +35,13 @@ private:
     };
 
     void addErrorMessage(const std::string& message, int durationMS);
-    void renderErrorMessages();
 
 public:
 
-    friend class VisualizeTaskManager;
-
+    void renderErrorMessages();
     void e_log(int id);
-    void verbose_log( int classID, std::string msg);
+    void e_log(int id, std::string message);
+    void verbose_log( int classID, std::string msg) const;
 
 
 };

@@ -1,5 +1,6 @@
 #pragma once
 
+
 /**
  * @class FibHeap
  * @brief Forward declaration of FibHeap class template.
@@ -24,9 +25,16 @@ class VisualizeFibonacciHeap;
 
 /**
  * @class VisualizeTaskManager
- * @brief Forward declaration of VisualizeFibonacciHeap class.
+ * @brief Forward declaration of VisualizeTaskManager class.
  */
 class VisualizeTaskManager;
+
+/**
+ * @class Patient
+ * @brief Forward declaration of Patient class.
+ */
+class Patient;
+
 
 /**
  * @class Node
@@ -44,6 +52,7 @@ private:
     Node *left; ///< Pointer to the left sibling node.
     Node *right; ///< Pointer to the right sibling node.
     bool mark; ///< Mark indicating whether the node has lost a child since it became a child of its current parent.
+    Patient * data = nullptr; ///< Class upholding Patient's extra data, Managed by the Hospital Task Manager
 
 public:
     /**

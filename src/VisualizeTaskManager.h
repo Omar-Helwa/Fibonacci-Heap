@@ -29,7 +29,7 @@ public:
         // ImGui::PopItemWidth();
 
         // Button to add a task
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(20, 20)); // Increase button size
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
         if (ImGui::Button("Add Task", ImVec2(contentRegion.x * 0.5f, 90))) {
             // 40% width, 70px height
             std::string descriptionStr(taskDescription);
@@ -39,7 +39,7 @@ public:
 
         ImGui::SameLine();
         // Button to complete the highest priority task
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(20, 20)); // Increase button size
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
         if (ImGui::Button("Complete Highest Priority Task", ImVec2(contentRegion.x * 0.5f, 90))) {
             // 50% width, 90px height
             manager.completeHighestPriorityTask();

@@ -18,6 +18,7 @@ add_executable(FibonacciHeapGUI
         src/_env.h
         src/error_handler.cpp
         include/error_handler.h
+        include/patient.h
 )
 
 # --- ImGui ---

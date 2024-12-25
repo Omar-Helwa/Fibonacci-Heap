@@ -3,10 +3,11 @@
 
 #include "imgui.h"
 #include "HospitalTaskManager.h"
+#include "error_handler.h"
 
 class VisualizeTaskManager {
 public:
-    void visualize(HospitalTaskManager &manager) {
+    void visualize(HospitalTaskManager &manager, error_handler * error_handler) {
         // Set global font scale
         // ImGui::GetIO().FontGlobalScale = 3.0f; // Increase font size globally
 
@@ -65,6 +66,10 @@ public:
             manager.updateTaskPriority(oldPriority, newPriority);
         }
         // ImGui::PopStyleVar();
+
+        ImGui::Separator();
+
+        error_handler->renderErrorMessages();
 
         ImGui::Separator();
 

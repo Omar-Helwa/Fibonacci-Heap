@@ -82,7 +82,7 @@ int main(int, char **) {
 
         // Call your visualization function
         visualizer.visualize(myHeap);
-        manager.visualize(taskManager);
+        manager.visualize(taskManager, &handler);
 
 
         // Rendering

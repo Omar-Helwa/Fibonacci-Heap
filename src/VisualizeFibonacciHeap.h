@@ -23,7 +23,6 @@ struct ImVec2;
  */
 class VisualizeFibonacciHeap {
 private:
-
     /**
     * @struct NodePositionPair
     * @brief Structure to store a node and its position.
@@ -257,110 +256,116 @@ public:
      * @param heap Reference to the Fibonacci Heap.
      */
     void visualize(FibHeap<std::string> &heap) {
-    ImGui::Begin("Fibonacci Heap Visualization");
+        ImGui::Begin("Fibonacci Heap Visualization");
 
-    // --- Control Panel ---
-    ImGui::Text("Controls");
+        // --- Control Panel ---
+        ImGui::Text("Controls");
 
-    if (ImGui::Button("Verbos - Development")) {
-        FLAG ? FLAG = false : FLAG = true;
-    }
+        ImGui::Checkbox("Development", &FLAG_DEV);
 
-    if (FLAG) {
-        // Input controls for inserting a node
-        static int insertValue = 0;
-        static char insertName[128] = "";
-        ImGui::InputText("Name", insertName, IM_ARRAYSIZE(insertName));
-        ImGui::InputInt("Key", &insertValue);
-
-        // Button to trigger insertion
-        // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
-        if (ImGui::Button("Insert")) {
-            std::string nameStr(insertName);
-            Node<std::string> *node = new Node<std::string>(nameStr, insertValue);
-            heap.insert(node);
+        if (FLAG_DEV) {
+            ImGui::Text("Feature is enabled");
+        } else {
+            ImGui::Text("Feature is disabled");
         }
-        // ImGui::PopStyleVar();
-
-        ImGui::SameLine();
-        // Button to extract the minimum node
-        // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
-        if (ImGui::Button("Extract-Min")) {
-            heap.extractMin();
-        }
-        // ImGui::PopStyleVar();
 
         ImGui::Separator();
 
-        // Input controls for modifying a key
-        static int modifyKey = 0;
-        static int newValue = 0;
-        ImGui::InputInt("Key to Modify", &modifyKey);
-        ImGui::InputInt("New Key Value", &newValue);
+        if (FLAG_DEV) {
+            // Input controls for inserting a node
+            static int insertValue = 0;
+            static char insertName[128] = "";
+            ImGui::InputText("Name", insertName, IM_ARRAYSIZE(insertName));
+            ImGui::InputInt("Key", &insertValue);
 
-        // Button to trigger key modification
-        // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
-        if (ImGui::Button("Modify Key")) {
-            heap.modifyKey(modifyKey, newValue);
+            // Button to trigger insertion
+            // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
+            if (ImGui::Button("Insert")) {
+                std::string nameStr(insertName);
+                Node<std::string> *node = new Node<std::string>(nameStr, insertValue);
+                heap.insert(node);
+            }
+            // ImGui::PopStyleVar();
+
+            ImGui::SameLine();
+            // Button to extract the minimum node
+            // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
+            if (ImGui::Button("Extract-Min")) {
+                heap.extractMin();
+            }
+            // ImGui::PopStyleVar();
+
+            ImGui::Separator();
+
+            // Input controls for modifying a key
+            static int modifyKey = 0;
+            static int newValue = 0;
+            ImGui::InputInt("Key to Modify", &modifyKey);
+            ImGui::InputInt("New Key Value", &newValue);
+
+            // Button to trigger key modification
+            // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
+            if (ImGui::Button("Modify Key")) {
+                heap.modifyKey(modifyKey, newValue);
+            }
+            // ImGui::PopStyleVar();
+
+            ImGui::Separator();
+
+            // Input control for deleting a node
+            static int deleteKey = 0;
+            ImGui::InputInt("Delete Key", &deleteKey);
+
+            // Button to trigger deletion
+            // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
+            if (ImGui::Button("Delete")) {
+                heap.deleteNode(deleteKey);
+            }
+            // ImGui::PopStyleVar();
+
+            ImGui::Separator();
         }
-        // ImGui::PopStyleVar();
 
-        ImGui::Separator();
+        // --- Visualization Area ---
+        ImGui::Text("Fibonacci Heap");
 
-        // Input control for deleting a node
-        static int deleteKey = 0;
-        ImGui::InputInt("Delete Key", &deleteKey);
+        // Get ImGui's draw list
+        ImDrawList *drawList = ImGui::GetWindowDrawList();
+        ImVec2 canvasPos = ImGui::GetCursorScreenPos(); // Top-left of the drawing area
+        ImVec2 canvasSize = ImGui::GetContentRegionAvail();
 
-        // Button to trigger deletion
-        // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
-        if (ImGui::Button("Delete")) {
-            heap.deleteNode(deleteKey);
+        // Get the roots of the heap
+        NodeArray roots = getRoots(heap);
+        // Initialize an array to store node positions
+        NodePositionPair nodePositions[MAX_NODES];
+        int numPositions = 0;
+
+        // Calculate positions for the root nodes
+        float rootSpacing = canvasSize.x / (roots.count + 1);
+        for (size_t i = 0; i < roots.count; ++i) {
+            ImVec2 rootPos = ImVec2(canvasPos.x + rootSpacing * (i + 1), canvasPos.y + 50);
+            // Adjust vertical position as needed
+            nodePositions[numPositions++] = {roots.nodes[i], rootPos};
+
+            // Recursively calculate positions of children
+            calculateNodePositions(roots.nodes[i], nodePositions, numPositions, rootPos, canvasSize.x);
         }
-        // ImGui::PopStyleVar();
 
-        ImGui::Separator();
-    }
+        // Draw the nodes
+        for (int i = 0; i < numPositions; i++) {
+            Node<std::string> *node = nodePositions[i].first;
+            ImVec2 position = nodePositions[i].second;
 
-    // --- Visualization Area ---
-    ImGui::Text("Fibonacci Heap");
-
-    // Get ImGui's draw list
-    ImDrawList *drawList = ImGui::GetWindowDrawList();
-    ImVec2 canvasPos = ImGui::GetCursorScreenPos(); // Top-left of the drawing area
-    ImVec2 canvasSize = ImGui::GetContentRegionAvail();
-
-    // Get the roots of the heap
-    NodeArray roots = getRoots(heap);
-    // Initialize an array to store node positions
-    NodePositionPair nodePositions[MAX_NODES];
-    int numPositions = 0;
-
-    // Calculate positions for the root nodes
-    float rootSpacing = canvasSize.x / (roots.count + 1);
-    for (size_t i = 0; i < roots.count; ++i) {
-        ImVec2 rootPos = ImVec2(canvasPos.x + rootSpacing * (i + 1), canvasPos.y + 50);
-        // Adjust vertical position as needed
-        nodePositions[numPositions++] = {roots.nodes[i], rootPos};
-
-        // Recursively calculate positions of children
-        calculateNodePositions(roots.nodes[i], nodePositions, numPositions, rootPos, canvasSize.x);
-    }
-
-    // Draw the nodes
-    for (int i = 0; i < numPositions; i++) {
-        Node<std::string> *node = nodePositions[i].first;
-        ImVec2 position = nodePositions[i].second;
-
-        drawNode(drawList, position, node->getKey(), node == heap.min, node->mark, IM_COL32(51, 255, 255, 255));
-    }
-
-    // Draw links between nodes
-    if (roots.count > 0) {
-        for (int i = 0; i < roots.count; i++) {
-            drawLinks(drawList, roots.nodes[i], nodePositions, numPositions, heap);
+            drawNode(drawList, position, node->getKey(), node == heap.min, node->mark, IM_COL32(51, 255, 255, 255));
         }
-    }
 
-    ImGui::End();
-}
+        // Draw links between nodes
+        if (roots.count > 0) {
+            for (int i = 0; i < roots.count; i++) {
+                drawLinks(drawList, roots.nodes[i], nodePositions, numPositions, heap);
+            }
+        }
+
+        ImGui::End();
+    }
 };

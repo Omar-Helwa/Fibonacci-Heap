@@ -277,7 +277,7 @@ public:
 
         // Button to trigger insertion
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
-        if (ImGui::Button("Insert", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 90))) {
+        if (ImGui::Button("Insert", ImVec2(ImGui::GetContentRegionAvail().x * 0.1f, 70))) {
             std::string nameStr(insertName);
             Node<std::string> *node = new Node<std::string>(nameStr, insertValue);
             heap.insert(node);
@@ -287,7 +287,7 @@ public:
         ImGui::SameLine();
         // Button to extract the minimum node
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
-        if (ImGui::Button("Extract-Min", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 90))) {
+        if (ImGui::Button("Extract-Min", ImVec2(ImGui::GetContentRegionAvail().x * 0.2f, 70))) {
             heap.extractMin();
         }
         ImGui::PopStyleVar();
@@ -302,7 +302,7 @@ public:
 
         // Button to trigger key modification
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
-        if (ImGui::Button("Modify Key", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 90))) {
+        if (ImGui::Button("Modify Key", ImVec2(ImGui::GetContentRegionAvail().x * 0.2f, 70))) {
             heap.modifyKey(modifyKey, newValue);
         }
         ImGui::PopStyleVar();
@@ -315,7 +315,7 @@ public:
 
         // Button to trigger deletion
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 15)); // Increase button size
-        if (ImGui::Button("Delete", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 90))) {
+        if (ImGui::Button("Delete", ImVec2(ImGui::GetContentRegionAvail().x * 0.2f, 70))) {
             heap.deleteNode(deleteKey);
         }
         ImGui::PopStyleVar();

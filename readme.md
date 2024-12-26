@@ -44,6 +44,7 @@ The main goal of this project was to create the Fibonacci Heap structure. A Fibo
   - `VisualizeFibonacciHeap.h`: Visualization logic using Dear ImGui.
   - `HospitalTaskManager.h`: Task management logic.
   - `VisualizeTaskManager.h`: Visualization logic for task management using Dear ImGui.
+  - `Patient.h`: Definition of the Patient class used in task management.
 - `main.cpp`: Entry point of the application.
 
 ## Acknowledgements

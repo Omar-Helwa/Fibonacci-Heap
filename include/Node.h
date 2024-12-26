@@ -1,5 +1,5 @@
 #pragma once
-
+#include "patient.h"
 
 /**
  * @class FibHeap
@@ -29,11 +29,6 @@ class VisualizeFibonacciHeap;
  */
 class VisualizeTaskManager;
 
-/**
- * @class Patient
- * @brief Forward declaration of Patient class.
- */
-class Patient;
 
 
 /**
@@ -85,6 +80,9 @@ public:
      */
     int getDeg() const;
 
+    void setData(Patient * data);
+    Patient *getData();
+
     // Friend class declarations
     friend class DoublyCircularLinkedList<T>;
     friend class VisualizeFibonacciHeap;
@@ -96,6 +94,17 @@ template<typename T>
 Node<T>::Node(T Name, int key) : key(key), Name(Name), deg(0), parent(nullptr), child(nullptr),
                                  left(this), right(this), mark(false) {
 }
+
+template<typename T>
+void Node<T>::setData(Patient * data) {
+ this->data = data;
+}
+
+template<typename T>
+Patient* Node<T>::getData() {
+ return this->data;
+}
+
 
 template<typename T>
 Node<T>::~Node() = default;

@@ -15,12 +15,12 @@ class VisualizeTaskManager;
 
 class HospitalTaskManager {
 private:
-    FibHeap<std::string> * taskHeap;
-    error_handler * handler;
+    FibHeap<std::string> *taskHeap;
+    error_handler *handler;
 
 public:
-
-    HospitalTaskManager(FibHeap<std::string> * taskHeap, error_handler * handler): taskHeap(taskHeap), handler(handler){};
+    HospitalTaskManager(FibHeap<std::string> *taskHeap, error_handler *handler): taskHeap(taskHeap), handler(handler) {
+    };
 
     friend class VisualizeTaskManager;
 
@@ -31,7 +31,7 @@ public:
         }
     }
 
-    void addTask(const std::string &description, int priority) {
+    void addTask(const std::string &description, int priority, Patient *patient = nullptr) {
         if (priority < 0) {
             handler->e_log(00);
             return;
@@ -45,6 +45,7 @@ public:
             return;
         }
         Node<std::string> *newNode = new Node<std::string>(description, priority);
+        newNode->setData(patient);
         taskHeap->insert(newNode);
         handler->verbose_log(0, "Task added: " + description);
     }
@@ -89,6 +90,23 @@ public:
     void displayTasks() {
         std::cout << "Number of Tasks: " << taskHeap->getSize() << std::endl;
         taskHeap->display();
+    }
+
+    Node<std::string> *getTaskCopy(int Priority) {
+        Node<std::string> *taskNode = taskHeap->find(Priority);
+
+        if (taskNode == nullptr) {
+            handler->e_log(04); // Log error if the node is not found
+            return nullptr;
+        }
+
+        // Create a deep copy of the node
+        Node<std::string> *taskCopy = new Node<std::string>(taskNode->getName(), taskNode->getKey());
+        if (taskNode->getData() != nullptr) {
+            taskCopy->setData(new Patient(taskNode->getData()->getDescription(),taskNode->getData()->getAge(), taskNode->getData()->getGender() )); // Deep copy of the Patient data
+        }
+
+        return taskCopy;
     }
 };
 
